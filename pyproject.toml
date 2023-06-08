@@ -7,7 +7,15 @@ readme = "README.md"
 packages = [{include = "tg_bot"}]
 
 [tool.poetry.dependencies]
+aiogram = "v3.0.0b7"
+emoji = "^2.5.0"
+environs = "^9.5.0"
+peewee = "^3.16.2"
+peewee-async = "^0.8.1"
+peewee-migrate = "^1.10.1"
 python = "^3.10"
+loguru = "^0.7.0"
+aiopg = "^1.4.0"
 
 
 [build-system]

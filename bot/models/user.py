@@ -1,0 +1,19 @@
+from datetime import datetime
+from peewee import BigIntegerField, CharField, BooleanField, DateTimeField
+from .base import BaseModel
+
+
+class User(BaseModel):
+    id = BigIntegerField(primary_key=True)
+    telegram_user_id = BigIntegerField()
+    created_at = DateTimeField(default=lambda: datetime.utcnow())
+    first_name = CharField(default=None, null=True)
+    last_name = CharField(default=None, null=True)
+    username = CharField(default=None, null=True)
+    is_admin = BooleanField(default=False)
+
+    def __repr__(self) -> str:
+        return f'<User {self.username}>'
+
+    class Meta:
+        table_name = 'users'
