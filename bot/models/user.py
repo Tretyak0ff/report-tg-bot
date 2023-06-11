@@ -11,4 +11,4 @@ class User(Base):
     first_name = Column(String(), nullable=True)
     last_name = Column(String(), nullable=True)
     username = Column(String(), nullable=True)
-    is_admin = Column(Boolean(), default=False)
+    is_superuser = Column(Boolean(), default=False)
