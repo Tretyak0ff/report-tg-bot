@@ -1,10 +1,8 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from loguru import logger
-from peewee import Database
-from peewee_async import PostgresqlDatabase
-
-from config.loader import Config, load_config
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from config.loader import Config, load_config, load_engine
 from handlers import admin_handlers, user_handlers
 from keyboards.set_menu import set_main_menu
 from middlewares.database import SessionMiddleware
@@ -12,17 +10,11 @@ from middlewares.database import SessionMiddleware
 
 async def main() -> None:
     config: Config = load_config(".env")
+    sessionmaker: async_sessionmaker = load_engine(config.database)
     bot: Bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
-    db: Database = PostgresqlDatabase(
-        config.database.name,
-        host=config.database.host,
-        port=config.database.port,
-        user=config.database.user,
-        password=config.database.password
-    )
 
     dp: Dispatcher = Dispatcher()
-    dp.update.outer_middleware(SessionMiddleware(database=db))
+    dp.update.outer_middleware(SessionMiddleware(session_pool=sessionmaker))
 
     await set_main_menu(bot)
     logger.info('Bot is running')

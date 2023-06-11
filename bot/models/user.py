@@ -1,19 +1,14 @@
-from datetime import datetime
-from peewee import BigIntegerField, CharField, BooleanField, DateTimeField
-from .base import BaseModel
+from sqlalchemy import Column, BigInteger, DateTime, String, Boolean
+from models.base import Base
 
 
-class User(BaseModel):
-    id = BigIntegerField(primary_key=True)
-    telegram_user_id = BigIntegerField()
-    created_at = DateTimeField(default=lambda: datetime.utcnow())
-    first_name = CharField(default=None, null=True)
-    last_name = CharField(default=None, null=True)
-    username = CharField(default=None, null=True)
-    is_admin = BooleanField(default=False)
+class User(Base):
+    __tablename__ = "users"
 
-    def __repr__(self) -> str:
-        return f'<User {self.username}>'
-
-    class Meta:
-        table_name = 'users'
+    id = Column(BigInteger, primary_key=True, unique=True, autoincrement=False)
+    telegram_user_id = Column(BigInteger)
+    created_at = Column(DateTime())
+    first_name = Column(String(), nullable=True)
+    last_name = Column(String(), nullable=True)
+    username = Column(String(), nullable=True)
+    is_admin = Column(Boolean(), default=False)

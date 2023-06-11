@@ -2,14 +2,13 @@ from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 from loguru import logger
-from peewee import Database
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 
 class SessionMiddleware(BaseMiddleware):
-    def __init__(self, database: Database) -> None:
-        logger.info(database)
-        self.database = database
+    def __init__(self, session_pool: async_sessionmaker) -> None:
         super().__init__()
+        self.session_pool = session_pool
 
     async def __call__(
         self,
@@ -17,16 +16,10 @@ class SessionMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any]
     ) -> Any:
-        # async with self.database() as database:
-        # data["database"] = self.database()
-        logger.debug(event)
-        logger.info(data)
-        # return await handler(event, data)
-
-        # print("Before handler")
-        # result = await handler(event, data)
-        # print("After handler")
-        # return result
+        async with self.session_pool() as session:
+            data["session"] = session
+            logger.info(data)
+            return await handler(event, data)
 
 
 class AdminMiddleware(BaseMiddleware):

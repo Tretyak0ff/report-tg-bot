@@ -1,9 +1,3 @@
-from peewee import Model
-from peewee_async import PostgresqlDatabase
+from sqlalchemy.orm import declarative_base
 
-database = PostgresqlDatabase(None)
-
-
-class BaseModel(Model):
-    class Meta:
-        database = database
+Base = declarative_base()

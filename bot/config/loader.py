@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from environs import Env
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 
 @dataclass
@@ -37,3 +38,16 @@ def load_config(path: str | None) -> Config:
                                     )
                   )
     return cnfg
+
+
+def get_url_database(database: Config) -> str:
+    return (f"postgresql+asyncpg://{database.user}:"
+            f"{database.password}@{database.host}:"
+            f"{database.port}/{database.name}")
+
+
+def load_engine(database: Config) -> async_sessionmaker:
+    engine = create_async_engine(
+        url=get_url_database(database=database), echo=True)
+    sessionmaker = async_sessionmaker(engine, expire_on_commit=False)
+    return sessionmaker
