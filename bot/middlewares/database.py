@@ -20,7 +20,3 @@ class SessionMiddleware(BaseMiddleware):
             data["session"] = session
             logger.info(data)
             return await handler(event, data)
-
-
-class AdminMiddleware(BaseMiddleware):
-    pass
