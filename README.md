@@ -97,79 +97,33 @@ report-tg-bot
 │   ├── alembic.ini
 │   ├── bot.py
 │   ├── config
-│   │   ├── __init__.py
 │   │   ├── loader.py
-│   │   └── __pycache__
-│   │       ├── config.cpython-310.pyc
-│   │       ├── __init__.cpython-310.pyc
-│   │       └── loader.cpython-310.pyc
 │   ├── handlers
 │   │   ├── admin_handlers.py
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   ├── admin_handlers.cpython-310.pyc
-│   │   │   ├── __init__.cpython-310.pyc
-│   │   │   ├── sadmin_handlers.cpython-310.pyc
-│   │   │   └── user_handlers.cpython-310.pyc
 │   │   ├── superuser_handlers.py
 │   │   └── user_handlers.py
-│   ├── __init__.py
 │   ├── keyboards
-│   │   ├── __init__.py
 │   │   ├── keyboard_utils.py
-│   │   ├── __pycache__
-│   │   │   ├── __init__.cpython-310.pyc
-│   │   │   └── set_menu.cpython-310.pyc
 │   │   └── set_menu.py
 │   ├── lexicon
-│   │   ├── __init__.py
 │   │   ├── lexicon_ru.py
-│   │   └── __pycache__
-│   │       ├── __init__.cpython-310.pyc
-│   │       └── lexicon_ru.cpython-310.pyc
 │   ├── middlewares
 │   │   ├── database.py
-│   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       ├── database.cpython-310.pyc
-│   │       ├── db.cpython-310.pyc
-│   │       └── __init__.cpython-310.pyc
 │   ├── migration
 │   │   ├── env.py
-│   │   ├── __pycache__
-│   │   │   └── env.cpython-310.pyc
 │   │   ├── README
 │   │   ├── script.py.mako
 │   │   └── versions
-│   │       ├── 108e8fb1998e_init_users.py
-│   │       ├── d47da09e827c_initial.py
-│   │       └── __pycache__
-│   │           ├── 108e8fb1998e_init_users.cpython-310.pyc
-│   │           └── d47da09e827c_initial.cpython-310.pyc
 │   ├── models
 │   │   ├── base.py
-│   │   ├── __init__.py
-│   │   ├── __pycache__
-│   │   │   ├── base.cpython-310.pyc
-│   │   │   ├── __init__.cpython-310.pyc
-│   │   │   └── user.cpython-310.pyc
 │   │   └── user.py
-│   ├── __pycache__
-│   │   ├── bot.cpython-310.pyc
-│   │   ├── config.cpython-310.pyc
-│   │   └── __init__.cpython-310.pyc
 │   └── services
-│       ├── __init__.py
-│       ├── __pycache__
-│       │   ├── __init__.cpython-310.pyc
-│       │   └── users.cpython-310.pyc
 │       └── users.py
 ├── docker-compose.yml
 ├── poetry.lock
 ├── pyproject.toml
 ├── README.md
 └── tests
-    └── __init__.py
 
 
  Используемая литература:
