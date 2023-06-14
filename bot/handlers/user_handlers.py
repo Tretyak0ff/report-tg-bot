@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import Message
+from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import Command, CommandStart
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,11 +10,25 @@ from services.users import _get_or_create_user
 router: Router = Router()
 
 
+url_button_1: InlineKeyboardButton = InlineKeyboardButton(
+    text='Курс "Телеграм-боты на Python и AIOgram"',
+    url='https://stepik.org/120924')
+url_button_2: InlineKeyboardButton = InlineKeyboardButton(
+    text='Документация Telegram Bot API',
+    url='https://core.telegram.org/bots/api')
+
+
+keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
+    inline_keyboard=[[url_button_1],
+                     [url_button_2]])
+
+
 @router.message(CommandStart())
 async def _start(message: Message):
     await message.answer(
         text=f'Привет, {message.from_user.full_name}!\n\n'
-        f'Команда /help ознакомление с возможностями'
+        f'Команда /help ознакомление с возможностями',
+        reply_markup=keyboard
     )
 
 

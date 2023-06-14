@@ -1,7 +1,6 @@
 from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
-from loguru import logger
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 
@@ -18,5 +17,4 @@ class SessionMiddleware(BaseMiddleware):
     ) -> Any:
         async with self.session_pool() as session:
             data["session"] = session
-            logger.info(data)
             return await handler(event, data)
