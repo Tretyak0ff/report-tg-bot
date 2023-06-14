@@ -29,16 +29,6 @@ async def _report(message: Message, session: AsyncSession):
     logger.warning(session)
     await message.answer(text='здесь будет FMS')
     logger.debug(await _get_or_create_user(message=message, session=session))
-    # await session.add(
-    #     User(
-    #         telegram_user_id=message.from_user.id,
-    #         created_at=message.date,
-    #         first_name=message.from_user.first_name,
-    #         last_name=message.from_user.last_name,
-    #         username=message.from_user.username,
-    #         is_superuser=False
-    #     ))
-    # await session.commit()
 
 
 @router.message()
