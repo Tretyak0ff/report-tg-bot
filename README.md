@@ -94,13 +94,13 @@ report-tg-bot
 
 
 ├── 📁 bot  
-│   ├── 📝 *alembic.ini*  
-│   ├── 📝 *bot.py*  
-│   ├── 📁 config  
-│   │     └── 📝 *loader.py*  
-│   ├── 📁 handlers  
-│   │     ├── 📝 *admin_handlers.py*  
-│   │     ├── 📝 *superuser_handlers.py*  
+│     ├── 📝 *alembic.ini*  
+│     ├── 📝 *bot.py*  
+│     ├── 📁 config  
+│     │     └── 📝 *loader.py*  
+│     ├── 📁 handlers  
+│     │     ├── 📝 *admin_handlers.py*  
+│     │     ├── 📝 *superuser_handlers.py*  
 │   │     └── 📝 *user_handlers.py*  
 │   ├── 📁 keyboards  
 │   │     ├── 📝 *keyboard_utils.py*  
