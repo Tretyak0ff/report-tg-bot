@@ -94,14 +94,12 @@ report-tg-bot
 
 
 ├── 📁 bot
-> Каталог проекта
+* Каталог проекта *
 
 │   ├── 📝 alembic.ini
-
 │   ├── 📝 bot.py
 
 │   ├──  📁 config
-
 │   │   ├── 📝 loader.py
 
 │   ├── handlers
