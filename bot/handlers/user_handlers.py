@@ -5,6 +5,7 @@ from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
 from models.user import User
+from services.users import _get_or_create_user
 
 router: Router = Router()
 
@@ -27,16 +28,17 @@ async def _report(message: Message, session: AsyncSession):
     logger.info(message.date)
     logger.warning(session)
     await message.answer(text='здесь будет FMS')
-    await session.merge(
-        User(
-            telegram_user_id=message.from_user.id,
-            created_at=message.date,
-            first_name=message.from_user.first_name,
-            last_name=message.from_user.last_name,
-            username=message.from_user.username,
-            is_superuser=False
-        ))
-    await session.commit()
+    logger.debug(await _get_or_create_user(message=message, session=session))
+    # await session.add(
+    #     User(
+    #         telegram_user_id=message.from_user.id,
+    #         created_at=message.date,
+    #         first_name=message.from_user.first_name,
+    #         last_name=message.from_user.last_name,
+    #         username=message.from_user.username,
+    #         is_superuser=False
+    #     ))
+    # await session.commit()
 
 
 @router.message()
