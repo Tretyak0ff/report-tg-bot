@@ -94,29 +94,38 @@ report-tg-bot
 
 
 ├── bot
+
 │   ├── alembic.ini
 │   ├── bot.py
 │   ├── config
+
 │   │   ├── loader.py
+
 │   ├── handlers
 │   │   ├── admin_handlers.py
 │   │   ├── superuser_handlers.py
 │   │   └── user_handlers.py
+
 │   ├── keyboards
 │   │   ├── keyboard_utils.py
 │   │   └── set_menu.py
+
 │   ├── lexicon
 │   │   ├── lexicon_ru.py
+
 │   ├── middlewares
 │   │   ├── database.py
+
 │   ├── migration
 │   │   ├── env.py
 │   │   ├── README
 │   │   ├── script.py.mako
 │   │   └── versions
+
 │   ├── models
 │   │   ├── base.py
 │   │   └── user.py
+
 │   └── services
 │       └── users.py
 ├── docker-compose.yml
