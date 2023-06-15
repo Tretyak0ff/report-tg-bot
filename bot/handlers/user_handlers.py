@@ -1,34 +1,37 @@
 from aiogram import Router
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import Command, CommandStart
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
-from models.user import User
-from services.users import _get_or_create_user
+from services.user import _get_or_create_user
+from keyboards.user import create_inline_keyboard
+
+from aiogram.filters import Text
 
 router: Router = Router()
-
-
-url_button_1: InlineKeyboardButton = InlineKeyboardButton(
-    text='Курс "Телеграм-боты на Python и AIOgram"',
-    url='https://stepik.org/120924')
-url_button_2: InlineKeyboardButton = InlineKeyboardButton(
-    text='Документация Telegram Bot API',
-    url='https://core.telegram.org/bots/api')
-
-
-keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
-    inline_keyboard=[[url_button_1],
-                     [url_button_2]])
 
 
 @router.message(CommandStart())
 async def _start(message: Message):
     await message.answer(
-        text=f'Привет, {message.from_user.full_name}!\n\n'
-        f'Команда /help ознакомление с возможностями',
-        reply_markup=keyboard
+        text=f"Привет, {message.from_user.full_name}!\n\n{ LEXICON_RU['/start']}",
+        reply_markup=create_inline_keyboard(2, btn_help="🆘 Помощь")
+    )
+
+
+@router.callback_query(Text(text=["btn_help"]))
+async def _button_help_press(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text=LEXICON_RU['/help'],
+        reply_markup=create_inline_keyboard(2, btn_report="📝 Отчет")
+    )
+
+
+@router.callback_query(Text(text=["btn_report"]))
+async def _button_report_press(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text="Нажата кнопка Добавить отчет"
     )
 
 
