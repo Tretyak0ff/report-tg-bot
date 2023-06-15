@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command, CommandStart
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,7 +15,8 @@ router: Router = Router()
 @router.message(CommandStart())
 async def _start(message: Message):
     await message.answer(
-        text=f"Привет, {message.from_user.full_name}!\n\n{ LEXICON_RU['/start']}",
+        text=f"Привет, {message.from_user.full_name}!\n\n"
+        f"{ LEXICON_RU['/start']}",
         reply_markup=create_inline_keyboard(2, btn_help="🆘 Помощь")
     )
 
