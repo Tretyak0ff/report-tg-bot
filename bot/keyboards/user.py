@@ -2,9 +2,9 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-def create_inline_keyboard(width: int,
-                           last_btn: str | None = None,
-                           **kwargs: str) -> InlineKeyboardMarkup:
+def _create_inline_keyboard(width: int,
+                            last_btn: str | None = None,
+                            **kwargs: str) -> InlineKeyboardMarkup:
     keyboard_builder: InlineKeyboardBuilder = InlineKeyboardBuilder()
     buttons: list[InlineKeyboardButton] = []
     if kwargs:

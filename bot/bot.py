@@ -16,6 +16,7 @@ async def main() -> None:
 
     dp: Dispatcher = Dispatcher()
     dp.update.outer_middleware(SessionMiddleware(session_pool=sessionmaker))
+
     dp.callback_query.middleware(CallbackAnswerMiddleware())
 
     await set_main_menu(bot)

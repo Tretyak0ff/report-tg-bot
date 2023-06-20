@@ -1,13 +1,16 @@
 from aiogram import Router
+from aiogram.filters import Text
 from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command, CommandStart, StateFilter
+from aiogram.fsm.state import default_state
+from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
-from services.user import _get_or_create_user
-from keyboards.user import create_inline_keyboard
+# from services.user import _get_or_create_user
+from keyboards.user import _create_inline_keyboard
+from states.user import AddTask
 
-from aiogram.filters import Text
 
 router: Router = Router()
 
@@ -17,7 +20,25 @@ async def _start(message: Message):
     await message.answer(
         text=f"Привет, {message.from_user.full_name}!\n\n"
         f"{ LEXICON_RU['/start']}",
-        reply_markup=create_inline_keyboard(2, btn_help="🆘 Помощь")
+        reply_markup=_create_inline_keyboard(2, btn_help="🆘 Помощь")
+    )
+
+
+@router.message(Command(commands='help'))
+async def _help(message: Message):
+    await message.answer(
+        text=LEXICON_RU['/help'],
+        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет")
+    )
+
+
+@router.message(Command(commands='report'))
+async def _report(message: Message, session: AsyncSession):
+    await message.answer(
+        text=LEXICON_RU['/report'],
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_add_report="➕ Добавить",
+                                             btn_view_report="🔭 Посмотреть")
     )
 
 
@@ -25,34 +46,39 @@ async def _start(message: Message):
 async def _button_help_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/help'],
-        reply_markup=create_inline_keyboard(2, btn_report="📝 Отчет")
+        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет")
     )
 
 
 @router.callback_query(Text(text=["btn_report"]))
 async def _button_report_press(callback: CallbackQuery):
     await callback.message.edit_text(
-        text="Нажата кнопка Добавить отчет"
+        text=LEXICON_RU['/report'],
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_add_report="➕ Добавить",
+                                             btn_view_report="🔭 Посмотреть")
     )
 
 
-@router.message(Command(commands='help'))
-async def _help(message: Message):
-    await message.answer(text=LEXICON_RU['/help'])
+@router.callback_query(Text(text=["btn_add_report"]))
+async def _button_add_reprot_press(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer(
+        text="Вы в меню отчетов, введите задачу")
+    await state.set_state(AddTask.task)
 
 
-@router.message(Command(commands='report'))
-async def _report(message: Message, session: AsyncSession):
-    logger.info(message.date)
-    logger.warning(session)
-    await message.answer(text='здесь будет FMS')
-    logger.debug(await _get_or_create_user(message=message, session=session))
+@router.message(AddTask.task)
+async def compeleted_task(message: Message, state: FSMContext):
+    await state.update_data(task=message.text)
+    logger.debug(message.text)
+    # добавление записи в бд
+    await message.answer(text="добавлено")
 
 
 @router.message()
-async def _echo(message: Message):
+async def _echo(message: Message, current_task: str):
     try:
-        # logger.info(message.date)
+        logger.debug(current_task)
         await message.send_copy(chat_id=message.chat.id)
     except TypeError:
         await message.reply(text=LEXICON_RU['no_echo'])
