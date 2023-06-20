@@ -1,8 +1,7 @@
 from aiogram import Router
 from aiogram.filters import Text
 from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command, CommandStart, StateFilter
-from aiogram.fsm.state import default_state
+from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
