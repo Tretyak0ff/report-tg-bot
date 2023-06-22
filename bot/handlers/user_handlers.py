@@ -35,9 +35,10 @@ async def _help(message: Message):
 async def _report(message: Message, session: AsyncSession):
     await message.answer(
         text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(2,
-                                             btn_add_report="➕ Добавить",
-                                             btn_view_report="🔭 Посмотреть")
+        reply_markup=_create_inline_keyboard(
+            2,
+            btn_add_report="➕ Добавить",
+            btn_view_report="🔭 Посмотреть")
     )
 
 
@@ -45,7 +46,9 @@ async def _report(message: Message, session: AsyncSession):
 async def _button_help_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет")
+        reply_markup=_create_inline_keyboard(
+            2,
+            btn_report="📝 Отчет")
     )
 
 
@@ -53,16 +56,17 @@ async def _button_help_press(callback: CallbackQuery):
 async def _button_report_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(2,
-                                             btn_add_report="➕ Добавить",
-                                             btn_view_report="🔭 Посмотреть")
+        reply_markup=_create_inline_keyboard(
+            2,
+            btn_add_report="➕ Добавить",
+            btn_view_report="🔭 Посмотреть")
     )
 
 
 @router.callback_query(Text(text=["btn_add_report"]))
 async def _button_add_reprot_press(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer(
-        text="Вы в меню отчетов, введите задачу")
+    await callback.message.edit_text(
+        text=LEXICON_RU['/add_report'])
     await state.set_state(AddTask.task)
 
 
@@ -71,13 +75,17 @@ async def compeleted_task(message: Message, state: FSMContext):
     await state.update_data(task=message.text)
     logger.debug(message.text)
     # добавление записи в бд
-    await message.answer(text="добавлено")
+    await message.answer(
+        text=LEXICON_RU['/add_task'],
+        reply_markup=_create_inline_keyboard(
+            2,
+            btn_compelete_report="✅ Завершить")
+    )
 
 
 @router.message()
 async def _echo(message: Message, current_task: str):
     try:
-        logger.debug(current_task)
         await message.send_copy(chat_id=message.chat.id)
     except TypeError:
         await message.reply(text=LEXICON_RU['no_echo'])
