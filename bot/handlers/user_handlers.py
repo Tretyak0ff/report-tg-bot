@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
-# from services.user import _get_or_create_user
+from services.user import _get_or_create_user
 from keyboards.user import _create_inline_keyboard
 from states.user import AddTask
 
@@ -31,7 +31,7 @@ async def _help(message: Message):
 
 
 @router.message(Command(commands='report'))
-async def _report(message: Message, session: AsyncSession):
+async def _report(message: Message):
     await message.answer(
         text=LEXICON_RU['/report'],
         reply_markup=_create_inline_keyboard(
@@ -42,10 +42,14 @@ async def _report(message: Message, session: AsyncSession):
 
 
 @router.message(AddTask.task)
-async def compeleted_task(message: Message, state: FSMContext):
+async def compeleted_task(message: Message, state: FSMContext,
+                          session: AsyncSession):
     await state.update_data(task=message.text)
-    logger.debug(message.text)
+    logger.debug(await state.get_data())
+
+    logger.debug(await _get_or_create_user(message=message, session=session))
     # добавление записи в бд
+
     await message.answer(
         text=LEXICON_RU['/add_task'],
         reply_markup=_create_inline_keyboard(

@@ -1,5 +1,6 @@
 import asyncio
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 from loguru import logger
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from config.loader import Config, load_config, load_engine
@@ -13,9 +14,10 @@ from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 async def main() -> None:
     config: Config = load_config(".env")
     sessionmaker: async_sessionmaker = load_engine(config.database)
+    storage: MemoryStorage = MemoryStorage()
     bot: Bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 
-    dp: Dispatcher = Dispatcher()
+    dp: Dispatcher = Dispatcher(storage=storage)
     dp.update.outer_middleware(SessionMiddleware(session_pool=sessionmaker))
 
     dp.callback_query.middleware(CallbackAnswerMiddleware())
