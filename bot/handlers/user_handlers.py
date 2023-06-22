@@ -1,6 +1,5 @@
 from aiogram import Router
-from aiogram.filters import Text
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
@@ -40,34 +39,6 @@ async def _report(message: Message, session: AsyncSession):
             btn_add_report="➕ Добавить",
             btn_view_report="🔭 Посмотреть")
     )
-
-
-@router.callback_query(Text(text=["btn_help"]))
-async def _button_help_press(callback: CallbackQuery):
-    await callback.message.edit_text(
-        text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(
-            2,
-            btn_report="📝 Отчет")
-    )
-
-
-@router.callback_query(Text(text=["btn_report"]))
-async def _button_report_press(callback: CallbackQuery):
-    await callback.message.edit_text(
-        text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(
-            2,
-            btn_add_report="➕ Добавить",
-            btn_view_report="🔭 Посмотреть")
-    )
-
-
-@router.callback_query(Text(text=["btn_add_report"]))
-async def _button_add_reprot_press(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text(
-        text=LEXICON_RU['/add_report'])
-    await state.set_state(AddTask.task)
 
 
 @router.message(AddTask.task)
