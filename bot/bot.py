@@ -13,12 +13,12 @@ from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 
 async def main() -> None:
     config: Config = load_config(".env")
-    sessionmaker: async_sessionmaker = load_engine(config.database)
+    async_session: async_sessionmaker = load_engine(config.database)
     storage: MemoryStorage = MemoryStorage()
     bot: Bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 
     dp: Dispatcher = Dispatcher(storage=storage)
-    dp.update.outer_middleware(SessionMiddleware(session_pool=sessionmaker))
+    dp.update.outer_middleware(SessionMiddleware(session=async_session))
 
     dp.callback_query.middleware(CallbackAnswerMiddleware())
 

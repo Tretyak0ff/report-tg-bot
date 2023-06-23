@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 
 class SessionMiddleware(BaseMiddleware):
-    def __init__(self, session_pool: async_sessionmaker) -> None:
+    def __init__(self, session: async_sessionmaker) -> None:
         super().__init__()
-        self.session_pool = session_pool
+        self.session = session
 
     async def __call__(
         self,
@@ -15,6 +15,6 @@ class SessionMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any]
     ) -> Any:
-        async with self.session_pool() as session:
+        async with self.session() as session:
             data["session"] = session
             return await handler(event, data)

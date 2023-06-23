@@ -12,3 +12,4 @@ class User(Base):
     last_name = Column(String(), nullable=True)
     username = Column(String(), nullable=True)
     is_superuser = Column(Boolean(), default=False)
+    work_mode = Column(String(), nullable=True)

@@ -31,23 +31,27 @@ async def _help(message: Message):
 
 
 @router.message(Command(commands='report'))
-async def _report(message: Message):
-    await message.answer(
-        text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(
-            2,
-            btn_add_report="➕ Добавить",
-            btn_view_report="🔭 Посмотреть")
-    )
+async def _report(message: Message, session: AsyncSession):
+    user = await _get_or_create_user(
+        aiogram_user=message.from_user, session=session)
+    logger.debug(user.__dict__)
+
+    # await message.answer(
+    #     text=LEXICON_RU['/report'],
+    #     reply_markup=_create_inline_keyboard(
+    #         2,
+    #         btn_add_report="➕ Добавить",
+    #         btn_view_report="🔭 Посмотреть")
+    # )
+    # logger.debug(await _get_or_create_user(message=message, session=session))
 
 
 @router.message(AddTask.task)
 async def compeleted_task(message: Message, state: FSMContext,
                           session: AsyncSession):
     await state.update_data(task=message.text)
-    logger.debug(await state.get_data())
+    # logger.debug(await state.get_data())
 
-    logger.debug(await _get_or_create_user(message=message, session=session))
     # добавление записи в бд
 
     await message.answer(
