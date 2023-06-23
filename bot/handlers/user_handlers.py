@@ -5,10 +5,10 @@ from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
-from services.user import _get_or_create_user
+from services.database import _get_or_create_user
 from keyboards.user import _create_inline_keyboard
 from states.user import AddTask
-
+from typing import Any
 
 router: Router = Router()
 
@@ -26,7 +26,8 @@ async def _start(message: Message):
 async def _help(message: Message):
     await message.answer(
         text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет")
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_report="📝 Отчет")
     )
 
 
@@ -35,7 +36,7 @@ async def _report(message: Message, session: AsyncSession):
     user = await _get_or_create_user(
         aiogram_user=message.from_user, session=session)
     logger.debug(user.__dict__)
-
+    # if user.
     # await message.answer(
     #     text=LEXICON_RU['/report'],
     #     reply_markup=_create_inline_keyboard(

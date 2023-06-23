@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.user import _create_inline_keyboard
-from services.user import _get_or_create_user
+from services.database import _get_or_create_user
 from states.user import AddTask
 from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,17 +17,16 @@ router: Router = Router()
 async def _btn_help_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(
-            2,
-            btn_report="📝 Отчет")
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_report="📝 Отчет")
     )
 
 
 @router.callback_query(Text(text=["btn_report"]))
 async def _btn_report_press(callback: CallbackQuery, session: AsyncSession):
-    logger.debug(_get_or_create_user(
+    user = await _get_or_create_user(
         aiogram_user=callback.from_user, session=session)
-        )
+    logger.debug(user.__dict__)
 
     # await callback.message.edit_text(
     #     text=LEXICON_RU['/report'],
