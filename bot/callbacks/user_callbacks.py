@@ -4,10 +4,10 @@ from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.user import _create_inline_keyboard
-from services.database import _get_or_create_user
 from states.user import AddTask
-from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
+from models.database import User
+from filters.user import WorkMode, AbsenceWorkMode
 
 
 router: Router = Router()
@@ -18,39 +18,77 @@ async def _btn_help_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/help'],
         reply_markup=_create_inline_keyboard(2,
-                                             btn_report="📝 Отчет")
-    )
+                                             btn_report="📝 Отчет"))
 
 
 @router.callback_query(Text(text=["btn_report"]))
-async def _btn_report_press(callback: CallbackQuery, session: AsyncSession):
-    user = await _get_or_create_user(
-        aiogram_user=callback.from_user, session=session)
-    logger.debug(user.__dict__)
-
-    # await callback.message.edit_text(
-    #     text=LEXICON_RU['/report'],
-    #     reply_markup=_create_inline_keyboard(
-    #         2,
-    #         btn_add_report="➕ Добавить",
-    #         btn_view_report="🔭 Посмотреть")
-    # )
-    # logger.debug(await _get_or_create_user(message=message, session=session))
-
-
-@router.callback_query(Text(text=["btn_add_report"]))
-async def _btn_add_reprot_press(callback: CallbackQuery, state: FSMContext):
+async def _btn_report_press(callback: CallbackQuery):
     await callback.message.edit_text(
-        text=LEXICON_RU['/add_report'])
+        text=LEXICON_RU['/report'],
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_add_report="➕ Добавить",
+                                             btn_view_report="🔭 Посмотреть"))
+
+
+@router.callback_query(Text(text=["btn_add_report"]), WorkMode())
+async def _btn_add_report_press_presence_work_mode(callback: CallbackQuery,
+                                                   state: FSMContext):
+    await callback.message.edit_text(
+        text=LEXICON_RU['/add_report'],
+        reply_markup=_create_inline_keyboard(
+            2, btn_back_report="⬅ Назад"))
     await state.set_state(AddTask.task)
+
+
+@router.callback_query(Text(text=["btn_add_report"]), AbsenceWorkMode())
+async def _btn_add_report_press__absence_work_mode(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text=LEXICON_RU['/add_work_mode'],
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_mode_five="💀 Пятидневный",
+                                             btn_mode_shift="☠️ Сменный")
+    )
+
+
+@router.callback_query(Text(text=["btn_mode_five"]), AbsenceWorkMode())
+async def _btn_mode_five_press(callback: CallbackQuery, state: FSMContext,
+                               session: AsyncSession, user: User):
+    user.work_mode = "five-day"
+    await session.commit()
+    await callback.message.edit_text(
+        text=LEXICON_RU['/add_report'],
+        reply_markup=_create_inline_keyboard(
+            2, btn_back_report="⬅ Назад"))
+    await state.set_state(AddTask.task)
+
+
+@router.callback_query(Text(text=["btn_mode_shift"]), AbsenceWorkMode())
+async def _btn_mode_shift_press(callback: CallbackQuery, state: FSMContext,
+                                session: AsyncSession, user: User):
+    user.work_mode = "shift"
+    await session.commit()
+    await callback.message.edit_text(
+        text=LEXICON_RU['/add_report'],
+        reply_markup=_create_inline_keyboard(
+            2, btn_back_report="⬅ Назад"))
+    await state.set_state(AddTask.task)
+
+
+@router.callback_query(Text(text=["btn_back_report"]))
+async def _btn_back_report_press(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text=LEXICON_RU['/report'],
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_add_report="➕ Добавить",
+                                             btn_view_report="🔭 Посмотреть")
+    )
 
 
 @router.callback_query(Text(text=["btn_compelete_report"]))
 async def _btn_compelete_report_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/compelete_report'],
-        reply_markup=_create_inline_keyboard(
-            2,
-            btn_add_report="➕ Добавить",
-            btn_view_report="🔭 Посмотреть")
+        reply_markup=_create_inline_keyboard(2,
+                                             btn_add_report="➕ Добавить",
+                                             btn_view_report="🔭 Посмотреть")
     )
