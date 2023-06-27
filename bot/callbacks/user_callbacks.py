@@ -80,8 +80,7 @@ async def _btn_back_report_press(callback: CallbackQuery):
         text=LEXICON_RU['/report'],
         reply_markup=_create_inline_keyboard(2,
                                              btn_add_report="➕ Добавить",
-                                             btn_view_report="🔭 Посмотреть")
-    )
+                                             btn_view_report="🔭 Посмотреть"))
 
 
 @router.callback_query(Text(text=["btn_compelete_report"]))
@@ -90,8 +89,7 @@ async def _btn_compelete_report_press(callback: CallbackQuery):
         text=LEXICON_RU['/compelete_report'],
         reply_markup=_create_inline_keyboard(2,
                                              btn_add_report="➕ Добавить",
-                                             btn_view_report="🔭 Посмотреть")
-    )
+                                             btn_view_report="🔭 Посмотреть"))
 
 
 @router.callback_query(Text(text=["btn_view_report"]))

@@ -38,8 +38,7 @@ async def _compeleted_task(message: Message, state: FSMContext):
     await message.answer(
         text=LEXICON_RU['/add_task'],
         reply_markup=_create_inline_keyboard(
-            2, btn_compelete_report="✅ Завершить")
-    )
+            2, btn_compelete_report="✅ Завершить"))
 
 
 @router.message()
