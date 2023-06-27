@@ -41,7 +41,7 @@ async def _btn_add_report_press_presence_work_mode(callback: CallbackQuery,
 
 
 @router.callback_query(Text(text=["btn_add_report"]), AbsenceWorkMode())
-async def _btn_add_report_press__absence_work_mode(callback: CallbackQuery):
+async def _btn_add_report_press_absence_work_mode(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/add_work_mode'],
         reply_markup=_create_inline_keyboard(2,
@@ -56,7 +56,7 @@ async def _btn_mode_five_press(callback: CallbackQuery, state: FSMContext,
     user.work_mode = "five-day"
     await session.commit()
     await callback.message.edit_text(
-        text=LEXICON_RU['/add_report'],
+        text=LEXICON_RU['/add_report_'],
         reply_markup=_create_inline_keyboard(
             2, btn_back_report="⬅ Назад"))
     await state.set_state(AddTask.task)
@@ -92,3 +92,10 @@ async def _btn_compelete_report_press(callback: CallbackQuery):
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть")
     )
+
+
+@router.callback_query(Text(text=["btn_view_report"]))
+async def _btn_view_report_press(callback: CallbackQuery):
+    await callback.message.edit_text(
+        text="Просмотр задач",
+        reply_markup=None)

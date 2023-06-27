@@ -3,7 +3,6 @@ from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
-from sqlalchemy.ext.asyncio import AsyncSession
 from keyboards.user import _create_inline_keyboard
 from states.user import AddTask
 
@@ -34,8 +33,7 @@ async def _report(message: Message):
 
 
 @router.message(AddTask.task)
-async def _compeleted_task(message: Message, state: FSMContext,
-                           session: AsyncSession):
+async def _compeleted_task(message: Message, state: FSMContext):
     await state.update_data(task=message.text)
     await message.answer(
         text=LEXICON_RU['/add_task'],
