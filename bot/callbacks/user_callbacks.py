@@ -46,8 +46,7 @@ async def _btn_add_report_press_absence_work_mode(callback: CallbackQuery):
         text=LEXICON_RU['/add_work_mode'],
         reply_markup=_create_inline_keyboard(2,
                                              btn_mode_five="💀 Пятидневный",
-                                             btn_mode_shift="☠️ Сменный")
-    )
+                                             btn_mode_shift="☠️ Сменный"))
 
 
 @router.callback_query(Text(text=["btn_mode_five"]), AbsenceWorkMode())
