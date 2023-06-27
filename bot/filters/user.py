@@ -11,7 +11,7 @@ class WorkMode(BaseFilter):
         user = await _get_or_create_user(aiogram_user=callback.from_user,
                                          session=session)
         if user.work_mode:
-            return True
+            return {"user": user}
 
 
 class AbsenceWorkMode(BaseFilter):

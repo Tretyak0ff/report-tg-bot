@@ -5,6 +5,9 @@ from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.user import _create_inline_keyboard
 from states.user import AddTask
+from filters.user import WorkMode
+from models.database import User
+from loguru import logger
 
 router: Router = Router()
 
@@ -32,9 +35,10 @@ async def _report(message: Message):
                                              btn_view_report="🔭 Посмотреть"))
 
 
-@router.message(AddTask.task)
-async def _compeleted_task(message: Message, state: FSMContext):
+@router.message(AddTask.task, WorkMode())
+async def _compeleted_task(message: Message, state: FSMContext, user: User):
     await state.update_data(task=message.text)
+    logger.error(user.__dict__)
     await message.answer(
         text=LEXICON_RU['/add_task'],
         reply_markup=_create_inline_keyboard(
