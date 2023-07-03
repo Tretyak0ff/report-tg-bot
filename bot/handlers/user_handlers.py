@@ -1,4 +1,5 @@
 from aiogram import Router
+from aiogram.methods import DeleteMessage
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
@@ -22,6 +23,8 @@ async def _start(message: Message):
 
 @router.message(Command(commands='help'))
 async def _help(message: Message):
+    await DeleteMessage(chat_id=message.chat.id,
+                        message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/help'],
         reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет",
@@ -30,6 +33,8 @@ async def _help(message: Message):
 
 @router.message(Command(commands='report'))
 async def _report(message: Message):
+    await DeleteMessage(chat_id=message.chat.id,
+                        message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/report'],
         reply_markup=_create_inline_keyboard(2, btn_add_report="➕ Добавить",
@@ -39,8 +44,8 @@ async def _report(message: Message):
 @router.message(AddTask.task, WorkMode())
 async def _compeleted_task(message: Message, state: FSMContext, user: User):
     await state.update_data(task=message.text)
-    # logger.error(user.__dict__)
-    # logger.info(message)
+    await DeleteMessage(chat_id=message.chat.id,
+                        message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/add_task'],
         reply_markup=_create_inline_keyboard(
@@ -49,7 +54,10 @@ async def _compeleted_task(message: Message, state: FSMContext, user: User):
 
 @router.message()
 async def _echo(message: Message):
-    try:
-        await message.send_copy(chat_id=message.chat.id)
-    except TypeError:
-        await message.reply(text=LEXICON_RU['no_echo'])
+    await DeleteMessage(chat_id=message.chat.id,
+                        message_id=message.message_id-1)
+    await message.answer(text=LEXICON_RU['/echo'])
+    # try:
+    #     await message.send_copy(chat_id=message.chat.id)
+    # except TypeError:
+    #     await message.reply(text=LEXICON_RU['no_echo'])
