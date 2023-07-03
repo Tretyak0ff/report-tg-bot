@@ -8,7 +8,6 @@ from states.user import AddTask
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.database import User
 from filters.user import WorkMode, AbsenceWorkMode
-from loguru import logger
 
 
 router: Router = Router()
