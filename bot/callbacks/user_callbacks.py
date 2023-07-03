@@ -8,6 +8,7 @@ from states.user import AddTask
 from sqlalchemy.ext.asyncio import AsyncSession
 from models.database import User
 from filters.user import WorkMode, AbsenceWorkMode
+from loguru import logger
 
 
 router: Router = Router()
@@ -55,7 +56,7 @@ async def _btn_mode_five_press(callback: CallbackQuery, state: FSMContext,
     user.work_mode = "five-day"
     await session.commit()
     await callback.message.edit_text(
-        text=LEXICON_RU['/add_report_'],
+        text=LEXICON_RU['/add_report'],
         reply_markup=_create_inline_keyboard(
             2, btn_back_report="⬅ Назад"))
     await state.set_state(AddTask.task)
@@ -74,12 +75,13 @@ async def _btn_mode_shift_press(callback: CallbackQuery, state: FSMContext,
 
 
 @router.callback_query(Text(text=["btn_back_report"]))
-async def _btn_back_report_press(callback: CallbackQuery):
+async def _btn_back_report_press(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         text=LEXICON_RU['/report'],
         reply_markup=_create_inline_keyboard(2,
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть"))
+    await state.clear()
 
 
 @router.callback_query(Text(text=["btn_compelete_report"]))

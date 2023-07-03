@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
@@ -24,7 +24,8 @@ async def _start(message: Message):
 async def _help(message: Message):
     await message.answer(
         text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет"))
+        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет",
+                                             btn_progile='🥷 Профиль'))
 
 
 @router.message(Command(commands='report'))
@@ -38,7 +39,8 @@ async def _report(message: Message):
 @router.message(AddTask.task, WorkMode())
 async def _compeleted_task(message: Message, state: FSMContext, user: User):
     await state.update_data(task=message.text)
-    logger.error(user.__dict__)
+    # logger.error(user.__dict__)
+    # logger.info(message)
     await message.answer(
         text=LEXICON_RU['/add_task'],
         reply_markup=_create_inline_keyboard(
