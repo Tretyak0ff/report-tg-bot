@@ -17,7 +17,7 @@ router: Router = Router()
 async def _btn_help_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(2,
+        reply_markup=_create_inline_keyboard(width=2,
                                              btn_report="📝 Отчет"))
 
 
@@ -25,7 +25,7 @@ async def _btn_help_press(callback: CallbackQuery):
 async def _btn_report_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(2,
+        reply_markup=_create_inline_keyboard(width=2,
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть"))
 
@@ -35,8 +35,8 @@ async def _btn_add_report_press_presence_work_mode(callback: CallbackQuery,
                                                    state: FSMContext):
     await callback.message.edit_text(
         text=LEXICON_RU['/add_report'],
-        reply_markup=_create_inline_keyboard(
-            2, btn_back_report="⬅ Назад"))
+        reply_markup=_create_inline_keyboard(width=2,
+                                             btn_back_report="⬅ Назад"))
     await state.set_state(AddTask.task)
 
 
@@ -44,7 +44,7 @@ async def _btn_add_report_press_presence_work_mode(callback: CallbackQuery,
 async def _btn_add_report_press_absence_work_mode(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/add_work_mode'],
-        reply_markup=_create_inline_keyboard(2,
+        reply_markup=_create_inline_keyboard(width=2,
                                              btn_mode_five="💀 Пятидневный",
                                              btn_mode_shift="☠️ Сменный"))
 
@@ -56,8 +56,8 @@ async def _btn_mode_five_press(callback: CallbackQuery, state: FSMContext,
     await session.commit()
     await callback.message.edit_text(
         text=LEXICON_RU['/add_report'],
-        reply_markup=_create_inline_keyboard(
-            2, btn_back_report="⬅ Назад"))
+        reply_markup=_create_inline_keyboard(width=2,
+                                             btn_back_report="⬅ Назад"))
     await state.set_state(AddTask.task)
 
 
@@ -68,8 +68,8 @@ async def _btn_mode_shift_press(callback: CallbackQuery, state: FSMContext,
     await session.commit()
     await callback.message.edit_text(
         text=LEXICON_RU['/add_report'],
-        reply_markup=_create_inline_keyboard(
-            2, btn_back_report="⬅ Назад"))
+        reply_markup=_create_inline_keyboard(width=2, 
+                                             btn_back_report="⬅ Назад"))
     await state.set_state(AddTask.task)
 
 
@@ -77,7 +77,7 @@ async def _btn_mode_shift_press(callback: CallbackQuery, state: FSMContext,
 async def _btn_back_report_press(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(2,
+        reply_markup=_create_inline_keyboard(width=2,
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть"))
     await state.clear()
@@ -89,7 +89,7 @@ async def _btn_compelete_report_press(callback: CallbackQuery,
     await state.clear()
     await callback.message.edit_text(
         text=LEXICON_RU['/compelete_report'],
-        reply_markup=_create_inline_keyboard(2,
+        reply_markup=_create_inline_keyboard(width=2,
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть"))
 

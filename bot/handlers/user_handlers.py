@@ -8,6 +8,7 @@ from keyboards.user import _create_inline_keyboard
 from states.user import AddTask
 from filters.user import WorkMode
 from models.database import User
+from loguru import logger
 
 router: Router = Router()
 
@@ -17,7 +18,8 @@ async def _start(message: Message):
     await message.answer(
         text=f"Привет, {message.from_user.full_name}!\n\n"
         f"{ LEXICON_RU['/start']}",
-        reply_markup=_create_inline_keyboard(2, btn_help="🆘 Помощь"))
+        reply_markup=_create_inline_keyboard(width=2,
+                                             btn_help="🆘 Помощь"))
 
 
 @router.message(Command(commands='help'))
@@ -26,7 +28,8 @@ async def _help(message: Message):
                         message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/help'],
-        reply_markup=_create_inline_keyboard(2, btn_report="📝 Отчет",
+        reply_markup=_create_inline_keyboard(width=2,
+                                             btn_report="📝 Отчет",
                                              btn_progile='🥷 Профиль'))
 
 
@@ -36,19 +39,22 @@ async def _report(message: Message):
                         message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/report'],
-        reply_markup=_create_inline_keyboard(2, btn_add_report="➕ Добавить",
+        reply_markup=_create_inline_keyboard(width=2,
+                                             btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть"))
 
 
 @router.message(AddTask.task, WorkMode())
 async def _compeleted_task(message: Message, state: FSMContext, user: User):
     await state.update_data(task=message.text)
+    logger.debag(message.text)
     await DeleteMessage(chat_id=message.chat.id,
                         message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/add_task'],
         reply_markup=_create_inline_keyboard(
-            2, btn_compelete_report="✅ Завершить"))
+            width=2,
+            btn_compelete_report="✅ Завершить"))
 
 
 @router.message()
