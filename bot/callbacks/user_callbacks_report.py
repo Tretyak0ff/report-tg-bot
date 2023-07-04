@@ -14,8 +14,8 @@ router: Router = Router()
 
 
 @router.callback_query(Text(text=["btn_add_report"]), WorkMode())
-async def _btn_add_report_press_presence_work_mode(callback: CallbackQuery,
-                                                   state: FSMContext):
+async def _btn_add_report_press_presence(callback: CallbackQuery,
+                                         state: FSMContext):
     await callback.message.edit_text(
         text=LEXICON_RU['/add_report'],
         reply_markup=_create_inline_keyboard(width=2,
@@ -24,7 +24,7 @@ async def _btn_add_report_press_presence_work_mode(callback: CallbackQuery,
 
 
 @router.callback_query(Text(text=["btn_add_report"]), AbsenceWorkMode())
-async def _btn_add_report_press_absence_work_mode(callback: CallbackQuery):
+async def _btn_add_report_press_absence(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/add_work_mode'],
         reply_markup=_create_inline_keyboard(width=2,
