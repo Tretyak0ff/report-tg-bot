@@ -30,7 +30,7 @@ async def _help(message: Message):
         text=LEXICON_RU['/help'],
         reply_markup=_create_inline_keyboard(width=2,
                                              btn_report="📝 Отчет",
-                                             btn_progile='🥷 Профиль'))
+                                             btn_profile="🥷 Профиль"))
 
 
 @router.message(Command(commands='report'))
@@ -41,13 +41,14 @@ async def _report(message: Message):
         text=LEXICON_RU['/report'],
         reply_markup=_create_inline_keyboard(width=2,
                                              btn_add_report="➕ Добавить",
-                                             btn_view_report="🔭 Посмотреть"))
+                                             btn_view_report="🔭 Посмотреть",
+                                             btn_back_report="⬅ Назад"))
 
 
 @router.message(AddTask.task, WorkMode())
 async def _compeleted_task(message: Message, state: FSMContext, user: User):
     await state.update_data(task=message.text)
-    logger.debag(message.text)
+    logger.debug(message.text)
     await DeleteMessage(chat_id=message.chat.id,
                         message_id=message.message_id-1)
     await message.answer(
@@ -55,6 +56,19 @@ async def _compeleted_task(message: Message, state: FSMContext, user: User):
         reply_markup=_create_inline_keyboard(
             width=2,
             btn_compelete_report="✅ Завершить"))
+
+
+@router.message(Command(commands='profile'))
+async def _profilet(message: Message):
+    await DeleteMessage(chat_id=message.chat.id,
+                        message_id=message.message_id-1)
+    await message.answer(
+        text=f"Ваш профиль:\n\n"
+        f"{ LEXICON_RU['/profile']}",
+        reply_markup=_create_inline_keyboard(
+            width=1,
+            btn_edit_profile="✏ Редактировать",
+            btn_back_profile="⬅ Назад"))
 
 
 @router.message()
