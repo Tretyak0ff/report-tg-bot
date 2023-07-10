@@ -8,6 +8,7 @@ from keyboards.user import _create_inline_keyboard
 from states.user import AddTask
 from filters.user import WorkMode
 from models.database import User
+from services.profile import _user
 from loguru import logger
 
 router: Router = Router()
@@ -58,17 +59,17 @@ async def _compeleted_task(message: Message, state: FSMContext, user: User):
             btn_compelete_report="✅ Завершить"))
 
 
-@router.message(Command(commands='profile'))
-async def _profilet(message: Message):
+@router.message(Command(commands='profile'), WorkMode())
+async def _profilet(message: Message, user: User):
     await DeleteMessage(chat_id=message.chat.id,
                         message_id=message.message_id-1)
     await message.answer(
-        text=f"Ваш профиль:\n\n"
+        text=f"{_user(user=user) }"
         f"{ LEXICON_RU['/profile']}",
         reply_markup=_create_inline_keyboard(
             width=1,
             btn_edit_profile="✏ Редактировать",
-            btn_back_profile="⬅ Назад"))
+            btn_back="⬅ Назад"))
 
 
 @router.message()

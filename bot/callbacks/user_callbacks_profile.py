@@ -18,4 +18,4 @@ async def _btn_edit_profile_press(callback: CallbackQuery):
     await callback.message.edit_text(
         text=LEXICON_RU['/edit_profile'],
         reply_markup=_create_inline_keyboard(width=2,
-                                             btn_back_profile="⬅ Назад"))
+                                             btn_back="⬅ Назад"))
