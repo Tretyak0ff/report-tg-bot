@@ -40,7 +40,7 @@ async def _btn_mode_five_press(callback: CallbackQuery, state: FSMContext,
     await callback.message.edit_text(
         text=LEXICON_RU['/add_report'],
         reply_markup=_create_inline_keyboard(width=2,
-                                             btn_add_report_back="⬅ Назад"))
+                                             btn_back="⬅ Назад"))
     await state.set_state(AddTask.task)
 
 
@@ -64,7 +64,7 @@ async def _btn_add_report_back_press(callback: CallbackQuery,
         reply_markup=_create_inline_keyboard(width=2,
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть",
-                                             btn_back_report="⬅ Назад"))
+                                             btn_back="⬅ Назад"))
     await state.clear()
 
 
@@ -77,7 +77,7 @@ async def _btn_compelete_report_press(callback: CallbackQuery,
         reply_markup=_create_inline_keyboard(width=2,
                                              btn_add_report="➕ Добавить",
                                              btn_view_report="🔭 Посмотреть",
-                                             btn_back_report="⬅ Назад"))
+                                             btn_back="⬅ Назад"))
 
 
 @router.callback_query(Text(text=["btn_view_report"]))
