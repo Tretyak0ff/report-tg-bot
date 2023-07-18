@@ -1,8 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.types.user import User as AiogramUser
-from models.database import User
+from models.database import User, Task
 from datetime import datetime
+from loguru import logger
 
 
 async def _create_user(aiogram_user: AiogramUser) -> User:
@@ -36,3 +37,14 @@ async def _get_or_create_user(aiogram_user: AiogramUser,
         user = await _create_user(aiogram_user=aiogram_user)
         session.add(user)
     return user
+
+
+async def _create_task(user: User, task: str, session: AsyncSession) -> Task:
+    new_task = Task(
+        task=task,
+        created_at=datetime.now(),
+        user_id=user.id
+    )
+    session.add(new_task)
+    await session.commit()
+    return new_task

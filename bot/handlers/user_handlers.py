@@ -1,6 +1,7 @@
 from aiogram import Router
 from aiogram.methods import DeleteMessage
 from aiogram.types import Message
+from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
@@ -9,7 +10,8 @@ from states.user import AddTask
 from filters.user import WorkMode
 from models.database import User
 from services.profile import _user
-from loguru import logger
+from services.database import _create_task
+
 
 router: Router = Router()
 
@@ -47,9 +49,10 @@ async def _report(message: Message):
 
 
 @router.message(AddTask.task, WorkMode())
-async def _compeleted_task(message: Message, state: FSMContext, user: User):
+async def _compeleted_task(message: Message, session: AsyncSession,
+                           state: FSMContext, user: User):
     await state.update_data(task=message.text)
-    logger.debug(message.text)
+    await _create_task(session=session, user=user, task=message.text)
     await DeleteMessage(chat_id=message.chat.id,
                         message_id=message.message_id-1)
     await message.answer(
