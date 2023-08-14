@@ -1,5 +1,5 @@
 from aiogram.filters.state import State, StatesGroup
 
 
-class AddTask(StatesGroup):
-    task = State()
+class Checks(StatesGroup):
+    user = State()

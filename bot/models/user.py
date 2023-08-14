@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.types.user import User as AiogramUser
 from models.database import User, Task
 from datetime import datetime
-from loguru import logger
 
 
 async def _create_user(aiogram_user: AiogramUser) -> User:
@@ -27,8 +26,8 @@ async def _update_user(user: User, aiogram_user: AiogramUser) -> User:
     return update_user
 
 
-async def _get_or_create_user(aiogram_user: AiogramUser,
-                              session: AsyncSession) -> User:
+async def _get_user(aiogram_user: AiogramUser,
+                    session: AsyncSession) -> User:
     user = await(session.scalar(select(User).where(id == id)))
     if user:
         user = await _update_user(user=user, aiogram_user=aiogram_user)
@@ -36,6 +35,7 @@ async def _get_or_create_user(aiogram_user: AiogramUser,
     else:
         user = await _create_user(aiogram_user=aiogram_user)
         session.add(user)
+    await session.close()
     return user
 
 

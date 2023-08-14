@@ -15,6 +15,19 @@ class User(Base):
     is_superuser = Column(Boolean(), default=False)
     work_mode = Column(String(), nullable=True)
 
+    async def _print(self) -> str:
+        if self.work_mode == "five-day":
+            work_mode = "Пятидневный"
+        elif self.work_mode == "shift":
+            work_mode = "Сменный"
+        else:
+            work_mode = "Не определен"
+
+        return (f"Имя: {self.first_name}\n"
+                f"Фамилия: {self.last_name}\n"
+                f"Ник: {self.username}\n"
+                f"Режим работы: {work_mode}\n\n")
+
 
 class Task(Base):
     __tablename__ = "tasks"

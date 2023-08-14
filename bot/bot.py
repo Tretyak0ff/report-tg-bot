@@ -20,16 +20,17 @@ async def main() -> None:
 
     dp: Dispatcher = Dispatcher(storage=storage)
     dp.update.outer_middleware(SessionMiddleware(session=async_session))
-
     dp.callback_query.middleware(CallbackAnswerMiddleware())
 
     await set_main_menu(bot)
     logger.info('Bot is running')
 
     # dp.include_router(admin_handlers.router)
+    # @router.callback_query(Checks.user)
+
     dp.include_router(user_handlers.router)
     dp.include_router(user_callbacks.router)
-    dp.include_router(user_callbacks_profile.router)
+    # dp.include_router(user_callbacks_profile.router)
     dp.include_router(user_callbacks_report.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
