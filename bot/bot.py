@@ -8,7 +8,7 @@ from handlers import user_handlers
 from callbacks import user_callbacks
 from callbacks import user_callbacks_profile, user_callbacks_report
 from keyboards.set_menu import set_main_menu
-from middlewares.database import SessionMiddleware
+from middlewares.user import SessionMiddleware
 from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 
 

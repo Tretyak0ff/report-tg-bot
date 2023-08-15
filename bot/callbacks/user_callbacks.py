@@ -11,7 +11,7 @@ from states.user import Checks
 from loguru import logger
 from filters.user import FilterUser
 from keyboards.keyboard_utils import UserCallback
-from middlewares.database import CallbackMiddleware
+from middlewares.user import CallbackMiddleware
 
 router: Router = Router()
 

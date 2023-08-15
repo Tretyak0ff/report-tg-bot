@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from models.user import _get_user
 from models.database import User
 from loguru import logger
-from middlewares.database import CallbackMiddleware
+from middlewares.user import CallbackMiddleware
 
 
 router: Router = Router()
