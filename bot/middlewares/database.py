@@ -2,6 +2,10 @@ from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 from sqlalchemy.ext.asyncio import async_sessionmaker
+from aiogram.types import Message
+from sqlalchemy.ext.asyncio import AsyncSession
+from models.user import _get_user
+from loguru import logger
 
 
 class SessionMiddleware(BaseMiddleware):

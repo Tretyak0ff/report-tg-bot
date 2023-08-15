@@ -15,13 +15,12 @@ from keyboards.keyboard_utils import UserCallback
 router: Router = Router()
 
 
-@router.callback_query(Text(text=["btn_help"]))
 @router.callback_query(Text(text=["btn_back"]))
-async def _btn_help_press(callback: CallbackQuery,
-                          session: AsyncSession):
+async def btn_back_press(callback: CallbackQuery,
+                         session: AsyncSession):
     user: User = await _get_user(aiogram_user=callback.from_user,
                                  session=session)
-    await callback.message.edit_text(text=LEXICON_RU['/help'],
+    await callback.message.edit_text(text=LEXICON_RU['/menu'],
                                      reply_markup=_create_inline_keyboard(
         2,
         {"action": "btn_report",
@@ -34,6 +33,7 @@ async def _btn_help_press(callback: CallbackQuery,
 
 
 @router.callback_query(UserCallback.filter(F.value == "None"))
+@router.callback_query(Text(text=["btn_edit_profile"]))
 async def _btn_report_press_new_user(callback: CallbackQuery,
                                      callback_data: UserCallback):
     logger.debug(callback_data)

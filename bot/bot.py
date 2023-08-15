@@ -31,7 +31,7 @@ async def main() -> None:
     dp.include_router(user_handlers.router)
     dp.include_router(user_callbacks.router)
     # dp.include_router(user_callbacks_profile.router)
-    dp.include_router(user_callbacks_report.router)
+    # dp.include_router(user_callbacks_report.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)

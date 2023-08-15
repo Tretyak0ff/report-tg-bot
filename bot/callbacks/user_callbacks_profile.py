@@ -15,15 +15,17 @@ from loguru import logger
 
 router: Router = Router()
 
-
+@router.callback_query(Text(text=["btn_edit_profile"]))
 async def _btn_edit_profile_press(callback: CallbackQuery):
     await callback.message.edit_text(
-        text=LEXICON_RU['/add_work_mode'],
+        text=LEXICON_RU['/work_mode'],
         reply_markup=_create_inline_keyboard(
             width=2,
-            btn_edit_profile_mode_five="💀 Пятидневный",
-            btn_edit_profile_mode_shift="☠️ Сменный",
+            btn_mode_five="💀 Пятидневный",
+            btn_mode_shift="☠️ Сменный",
             btn_back="⬅ Назад"))
+    
+# async def _btn_mode_five
 
 
 # @router.callback_query(Text(text=["btn_edit_profile_mode_five"]))
