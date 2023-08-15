@@ -11,8 +11,11 @@ from states.user import Checks
 from loguru import logger
 from filters.user import FilterUser
 from keyboards.keyboard_utils import UserCallback
+from middlewares.database import CallbackMiddleware
 
 router: Router = Router()
+
+router.callback_query.middleware(CallbackMiddleware())
 
 
 @router.callback_query(Text(text=["btn_back"]))
@@ -20,8 +23,8 @@ async def btn_back_press(callback: CallbackQuery,
                          session: AsyncSession):
     user: User = await _get_user(aiogram_user=callback.from_user,
                                  session=session)
-    await callback.message.edit_text(text=LEXICON_RU['/menu'],
-                                     reply_markup=_create_inline_keyboard(
+    await callback.message.answer(text=LEXICON_RU['/menu'],
+                                  reply_markup=_create_inline_keyboard(
         2,
         {"action": "btn_report",
          "text": "📝 Отчет",
@@ -36,9 +39,9 @@ async def btn_back_press(callback: CallbackQuery,
 @router.callback_query(Text(text=["btn_edit_profile"]))
 async def _btn_report_press_new_user(callback: CallbackQuery,
                                      callback_data: UserCallback):
-    logger.debug(callback_data)
-    await callback.message.edit_text(text=LEXICON_RU['/work_mode'],
-                                     reply_markup=_create_inline_keyboard(
+    logger.debug(callback.message.date)
+    await callback.message.answer(text=LEXICON_RU['/work_mode'],
+                                  reply_markup=_create_inline_keyboard(
         width=2,
         btn_mode_five="💀 Пятидневный",
         btn_mode_shift="☠️ Сменный",
@@ -49,8 +52,8 @@ async def _btn_report_press_new_user(callback: CallbackQuery,
 async def _btn_report_press(callback: CallbackQuery,
                             callback_data: UserCallback):
     logger.debug('Дуй')
-    await callback.message.edit_text(text=LEXICON_RU['/report'],
-                                     reply_markup=_create_inline_keyboard(
+    await callback.message.answer(text=LEXICON_RU['/report'],
+                                  reply_markup=_create_inline_keyboard(
         width=2,
         btn_add_report="➕ Добавить",
         btn_view_report="🔭 Посмотреть",
@@ -64,8 +67,8 @@ async def _btn_profile_press(callback: CallbackQuery,
     logger.debug('Хуй')
     user: User = await _get_user(aiogram_user=callback.from_user,
                                  session=session)
-    await callback.message.edit_text(text=f"{await user._print()}",
-                                     reply_markup=_create_inline_keyboard(
-                                         width=1,
-                                         btn_edit_profile="✏ Редактировать",
-                                         btn_back="⬅ Назад"))
+    await callback.message.answer(text=f"{await user._print()}",
+                                  reply_markup=_create_inline_keyboard(
+                                      width=1,
+                                      btn_edit_profile="✏ Редактировать",
+                                      btn_back="⬅ Назад"))

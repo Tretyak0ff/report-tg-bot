@@ -48,6 +48,6 @@ def get_url_database(database: Config) -> str:
 
 def load_engine(database: Config) -> async_sessionmaker:
     engine = create_async_engine(
-        url=get_url_database(database=database), echo=True)
+        url=get_url_database(database=database), echo=False)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
     return async_session
