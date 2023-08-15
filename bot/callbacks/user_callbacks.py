@@ -23,6 +23,7 @@ async def btn_back_press(callback: CallbackQuery,
                          session: AsyncSession):
     user: User = await _get_user(aiogram_user=callback.from_user,
                                  session=session)
+    await callback.message.edit_reply_markup()
     await callback.message.answer(text=LEXICON_RU['/menu'],
                                   reply_markup=_create_inline_keyboard(
         2,

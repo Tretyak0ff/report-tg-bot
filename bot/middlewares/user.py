@@ -18,6 +18,7 @@ class SessionMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any]
     ) -> Any:
+
         # logger.error(data.get("event_from_user"))
         async with self.session() as session:
             data["session"] = session

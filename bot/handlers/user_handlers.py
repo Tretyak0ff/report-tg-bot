@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.methods import DeleteMessage
+from aiogram.methods import DeleteMessage, EditMessageReplyMarkup
 from aiogram.types import Message, ReplyKeyboardMarkup
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
@@ -22,6 +22,8 @@ async def _start(message: Message, user: User):
     try:
         # await DeleteMessage(chat_id=message.chat.id,
         #                     message_id=message.message_id-1)
+        await EditMessageReplyMarkup(chat_id=message.chat.id,
+                                     message_id=message.message_id-1)
         pass
     finally:
         await message.answer(
@@ -40,8 +42,11 @@ async def _start(message: Message, user: User):
 
 @router.message(Command(commands='menu'))
 async def _menu(message: Message, user: User):
+    await EditMessageReplyMarkup(chat_id=message.chat.id,
+                                 message_id=message.message_id-1)
     # await DeleteMessage(chat_id=message.chat.id,
     #                     message_id=message.message_id-1)
+    # await message.edit_reply_markup(inline_message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/menu'],
         reply_markup=_create_inline_keyboard(
