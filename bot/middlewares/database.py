@@ -4,6 +4,7 @@ from aiogram.types import TelegramObject, CallbackQuery
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from models.user import _get_user
 from loguru import logger
+from datetime import datetime, timedelta, timezone
 
 
 class SessionMiddleware(BaseMiddleware):
@@ -17,7 +18,7 @@ class SessionMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: Dict[str, Any]
     ) -> Any:
-        logger.error(data.get("event_from_user"))
+        # logger.error(data.get("event_from_user"))
         async with self.session() as session:
             data["session"] = session
             data["user"] = await _get_user(
@@ -33,15 +34,13 @@ class CallbackMiddleware(BaseMiddleware):
         event: CallbackQuery,
         data: Dict[str, Any]
     ) -> Any:
-        logger.info(event.message.date)
-        # # Если сегодня не суббота и не воскресенье,
-        # # то продолжаем обработку.
-        # if not _is_weekend():
-        #     return await handler(event, data)
-        # # В противном случае отвечаем на колбэк самостоятельно
-        # # и прекращаем дальнейшую обработку
-        # await event.answer(
-        #     "Бот по выходным не работает!",
-        #     show_alert=True
-        # )
-        return
+        message_date = event.message.date
+        now_date = datetime.utcnow().replace(tzinfo=timezone.utc)
+        delta_date = timedelta(seconds=10)
+        if message_date < now_date - delta_date:
+            await event.answer(
+                text="Кнопка устарела!\n Повторите команду",
+                show_alert=True
+            )
+        else:
+            return
