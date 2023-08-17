@@ -3,9 +3,8 @@ from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, CallbackQuery
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from models.user import _get_user
-from loguru import logger
 from datetime import datetime, timedelta, timezone
-from aiogram.methods import EditMessageText, DeleteMessage, EditMessageReplyMarkup
+from aiogram.methods import EditMessageReplyMarkup
 
 
 class SessionMiddleware(BaseMiddleware):
@@ -52,15 +51,9 @@ class CallbackMiddleware(BaseMiddleware):
             await EditMessageReplyMarkup(chat_id=event.message.chat.id,
                                          message_id=event.message.message_id)
         finally:
-
-            # logger.error(event.message.message_id)
-            # logger.error(event.message.chat.id)
-            # logger.error(event.message.message_id)
-            # # logger.error(event.chat)
-            # # logger.error(event.message.chat.id)
-            message_date = event.message.date
-            now_date = datetime.utcnow().replace(tzinfo=timezone.utc)
-            delta_date = timedelta(minutes=5)
+            message_date: datetime = event.message.date
+            now_date: datetime = datetime.utcnow().replace(tzinfo=timezone.utc)
+            delta_date: datetime = timedelta(minutes=5)
 
             if message_date < now_date - delta_date:
                 await event.answer(
@@ -68,4 +61,5 @@ class CallbackMiddleware(BaseMiddleware):
                     show_alert=True
                 )
             else:
+                data["message_text"] = event.message.html_text
                 return await handler(event, data)

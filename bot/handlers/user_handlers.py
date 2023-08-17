@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message, ReplyKeyboardMarkup
 from aiogram.filters import Command, CommandStart
-from aiogram.fsm.context import FSMContext
+# from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.keyboard_utils import _create_inline_keyboard
 from models.database import User
@@ -15,7 +15,6 @@ router.message.middleware(MessageMiddleware())
 
 @router.message(CommandStart())
 async def _start(message: Message, user: User):
-    logger.debug(user.__dict__)
     await message.answer(
         text=f"<b>Привет, {message.from_user.full_name}!\n\n</b>"
         f"{LEXICON_RU['/start']}",
@@ -32,8 +31,6 @@ async def _start(message: Message, user: User):
 
 @router.message(Command(commands='menu'))
 async def _menu(message: Message, user: User):
-    # await EditMessageText(text="Нажата кнопка Меню", chat_id=message.chat.id,
-    #                       message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/menu'],
         reply_markup=_create_inline_keyboard(
@@ -62,9 +59,9 @@ async def _report(message: Message, user: User):
             text=LEXICON_RU['/work_mode'],
             reply_markup=_create_inline_keyboard(
                 width=2,
-                btn_mode_five="💀 Пятидневный",
-                btn_mode_shift="☠️ Сменный",
-                btn_back="⬅ Назад"))
+                btn_mode_five="5⃣ Пятидневный",
+                btn_mode_shift="🔁 Сменный",
+                btn_menu="🗂 Меню"))
 
 
 @router.message(Command(commands='profile'))
@@ -81,9 +78,9 @@ async def _profile(message: Message, user: User):
             text=LEXICON_RU['/work_mode'],
             reply_markup=_create_inline_keyboard(
                 width=2,
-                btn_mode_five="💀 Пятидневный",
-                btn_mode_shift="☠️ Сменный",
-                btn_back="⬅ Назад"))
+                btn_mode_five="5⃣ Пятидневный",
+                btn_mode_shift="🔁 Сменный",
+                btn_menu="🗂 Меню"))
 
 # @router.message(AddReport._user_data)
 # async def _check_user_data(message: Message, session: AsyncSession,
@@ -100,25 +97,10 @@ async def _profile(message: Message, user: User):
     #         btn_compelete_report="✅ Завершить"))
 
 
-# @router.message(Command(commands='profile'), WorkMode())
-# async def _profilet(message: Message, user: User):
-#     await DeleteMessage(chat_id=message.chat.id,
-#                         message_id=message.message_id-1)
-#     await message.answer(
-#         text=f"{_user(user=user) }"
-#         f"{ LEXICON_RU['/profile']}",
-#         reply_markup=_create_inline_keyboard(
-#             width=1,
-#             btn_edit_profile="✏ Редактировать",
-#             btn_back="⬅ Назад"))
-
-
 @router.message()
 async def _echo(message: Message):
     logger.debug(message.text)
     await message.reply(['/menu'], reply_markup=ReplyKeyboardMarkup())
-    # await DeleteMessage(chat_id=message.chat.id,
-    #                     message_id=message.message_id-1)
     await message.answer(text=LEXICON_RU['/echo'])
     # try:
     #     await message.send_copy(chat_id=message.chat.id)

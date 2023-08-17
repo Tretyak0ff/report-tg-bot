@@ -35,7 +35,7 @@ async def _get_user(aiogram_user: AiogramUser,
     else:
         user = await _create_user(aiogram_user=aiogram_user)
         session.add(user)
-    await session.close()
+    await session.commit()
     return user
 
 
