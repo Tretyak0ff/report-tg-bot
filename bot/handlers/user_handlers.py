@@ -1,69 +1,54 @@
 from aiogram import Router
-from aiogram.methods import DeleteMessage, EditMessageReplyMarkup
 from aiogram.types import Message, ReplyKeyboardMarkup
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.keyboard_utils import _create_inline_keyboard
-from sqlalchemy.ext.asyncio import AsyncSession
-from models.user import _get_user
 from models.database import User
 from loguru import logger
-from middlewares.user import CallbackMiddleware
+from middlewares.user import MessageMiddleware
 
 
 router: Router = Router()
-
-# router.message.middleware(CallbackMiddleware())
+router.message.middleware(MessageMiddleware())
 
 
 @router.message(CommandStart())
 async def _start(message: Message, user: User):
-    try:
-        # await DeleteMessage(chat_id=message.chat.id,
-        #                     message_id=message.message_id-1)
-        await EditMessageReplyMarkup(chat_id=message.chat.id,
-                                     message_id=message.message_id-1)
-        pass
-    finally:
-        await message.answer(
-            text=f"Привет, {message.from_user.full_name}!\n\n"
-            f"{LEXICON_RU['/start']}",
-            reply_markup=_create_inline_keyboard(
-                1,
-                {"action": "btn_report",
-                 "text": "📝 Добавить отчет",
-                 "value": f'{user.work_mode}'},
-                {"action": "btn_profile",
-                 "text": "🥷 Просмотр профиля",
-                 "value": f'{user.work_mode}'}
-            ))
+    logger.debug(user.__dict__)
+    await message.answer(
+        text=f"<b>Привет, {message.from_user.full_name}!\n\n</b>"
+        f"{LEXICON_RU['/start']}",
+        reply_markup=_create_inline_keyboard(
+            1,
+            {"action": "btn_report",
+                "text": "📝 Добавить отчет",
+                "value": f'{user.work_mode}'},
+            {"action": "btn_profile",
+                "text": "🥷 Просмотр профиля",
+                "value": f'{user.work_mode}'}
+        ))
 
 
 @router.message(Command(commands='menu'))
 async def _menu(message: Message, user: User):
-    await EditMessageReplyMarkup(chat_id=message.chat.id,
-                                 message_id=message.message_id-1)
-    # await DeleteMessage(chat_id=message.chat.id,
-    #                     message_id=message.message_id-1)
-    # await message.edit_reply_markup(inline_message_id=message.message_id-1)
+    # await EditMessageText(text="Нажата кнопка Меню", chat_id=message.chat.id,
+    #                       message_id=message.message_id-1)
     await message.answer(
         text=LEXICON_RU['/menu'],
         reply_markup=_create_inline_keyboard(
             1,
             {"action": "btn_report",
-             "text": "📝 Отчет",
+             "text": "📝 Добавить отчет",
              "value": f'{user.work_mode}'},
             {"action": "btn_profile",
-             "text": "🥷 Профиль",
+             "text": "🥷 Просмотр профиля",
              "value": f'{user.work_mode}'}
         ))
 
 
 @router.message(Command(commands='report'))
 async def _report(message: Message, user: User):
-    # await DeleteMessage(chat_id=message.chat.id,
-    #                     message_id=message.message_id-1)
     if user.work_mode:
         await message.answer(
             text=LEXICON_RU['/report'],
@@ -84,8 +69,6 @@ async def _report(message: Message, user: User):
 
 @router.message(Command(commands='profile'))
 async def _profile(message: Message, user: User):
-    # await DeleteMessage(chat_id=message.chat.id,
-    #                     message_id=message.message_id-1)
     if user.work_mode:
         await message.answer(
             text=f"{await user._print()}",
