@@ -38,8 +38,6 @@ router.callback_query.middleware(CallbackMiddleware())
 @router.callback_query(Text(text=["btn_edit_profile"]))
 async def _btn_report_press_new_user(callback: CallbackQuery,
                                      callback_data: UserCallback):
-    # await EditMessageReplyMarkup(chat_id=callback.message.chat.id,
-    #                              message_id=callback.message.message_id)
     await callback.message.answer(text=LEXICON_RU['/work_mode'],
                                   reply_markup=_create_inline_keyboard(
         width=2,
