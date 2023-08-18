@@ -2,18 +2,14 @@ from aiogram import Router
 from aiogram.filters import Text
 from aiogram.types import CallbackQuery
 from aiogram.methods import EditMessageText
+from aiogram.fsm.context import FSMContext
 
 from middlewares.user import CallbackMiddleware
 from keyboards.keyboard_utils import _create_inline_keyboard
+from states.user import AddTask
 
-# from aiogram.fsm.context import FSMContext
 # from lexicon.lexicon_ru import LEXICON_RU
 # from keyboards.keyboard_utils import _create_inline_keyboard
-# from states.user import Checks
-# from sqlalchemy.ext.asyncio import AsyncSession
-# from models.database import User
-# from filters.user import WorkMode, AbsenceWorkMode
-# from sqlalchemy.ext.asyncio import AsyncSession
 # from models.user import _get_user
 # from loguru import logger
 # from filters.user import FilterUser
@@ -36,15 +32,18 @@ async def _btn_view_report_press(callback: CallbackQuery, message_text: str):
 
 
 @router.callback_query(Text(text=["btn_add_report"]))
-async def _btn_add_report_press(callback: CallbackQuery, message_text: str):
+async def _btn_add_report_press(callback: CallbackQuery, message_text: str,
+                                state: FSMContext):
     await EditMessageText(text=message_text + "\n➕",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
-    await callback.message.answer(
-        text="Добавление отчета",
-        reply_markup=_create_inline_keyboard(
-            width=1,
-            btn_back="⬅️ Назад"))
+
+    await state.set_state(AddTask.task)
+    # await callback.message.answer(
+    #     text="Добавление отчета",
+    #     reply_markup=_create_inline_keyboard(
+    #         width=1,
+    #         btn_back="⬅️ Назад"))
 
 
 # @router.callback_query(Checks._user)
