@@ -65,8 +65,13 @@ async def _btn_report_press(callback: CallbackQuery,
 
 @router.callback_query(UserCallback.filter(F.action == "btn_profile"))
 async def _btn_profile_press(callback: CallbackQuery,
-                             user: User):
-    await callback.message.answer(text=f"{await user._print()}",
+                             user: User,
+                             message_text: str):
+    await EditMessageText(text=message_text + "\n🥷",
+                          chat_id=callback.message.chat.id,
+                          message_id=callback.message.message_id)
+    await callback.message.answer(text=LEXICON_RU['/profile'] +
+                                  f"{await user._print()}",
                                   reply_markup=_create_inline_keyboard(
                                       width=1,
                                       btn_edit_profile="✏ Редактировать",
