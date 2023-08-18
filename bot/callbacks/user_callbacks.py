@@ -62,7 +62,7 @@ async def _btn_report_press(callback: CallbackQuery,
         width=2,
         btn_add_report="➕ Добавить",
         btn_view_report="🔭 Посмотреть",
-        btn_back="⬅ Назад"))
+        btn_menu="🗂 Меню"))
 
 
 @router.callback_query(UserCallback.filter(F.action == "btn_profile"))
@@ -76,4 +76,4 @@ async def _btn_profile_press(callback: CallbackQuery,
                                   reply_markup=_create_inline_keyboard(
                                       width=1,
                                       btn_edit_profile="✏ Редактировать",
-                                      btn_back="⬅ Назад"))
+                                      btn_menu="🗂 Меню"))
