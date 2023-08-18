@@ -1,6 +1,11 @@
 from aiogram import Router
-# from aiogram.filters import Text
-# from aiogram.types import CallbackQuery
+from aiogram.filters import Text
+from aiogram.types import CallbackQuery
+from aiogram.methods import EditMessageText
+
+from middlewares.user import CallbackMiddleware
+from keyboards.keyboard_utils import _create_inline_keyboard
+
 # from aiogram.fsm.context import FSMContext
 # from lexicon.lexicon_ru import LEXICON_RU
 # from keyboards.keyboard_utils import _create_inline_keyboard
@@ -15,13 +20,33 @@ from aiogram import Router
 
 
 router: Router = Router()
+router.callback_query.middleware(CallbackMiddleware())
 
 
-# @router.callback_query(Text(text=["btn_view_report"]))
-# async def _btn_view_report_press(callback: CallbackQuery):
-#     await callback.message.edit_text(
-#         text="Просмотр задач",
-#         reply_markup=None)
+@router.callback_query(Text(text=["btn_view_report"]))
+async def _btn_view_report_press(callback: CallbackQuery,
+                                 message_text: str):
+    await EditMessageText(text=message_text + "\n🔭",
+                          chat_id=callback.message.chat.id,
+                          message_id=callback.message.message_id)
+    await callback.message.answer(
+        text="Просмотр задач",
+        reply_markup=_create_inline_keyboard(
+            width=1,
+            btn_back="⬅️ Назад"))
+
+
+@router.callback_query(Text(text=["btn_add_report"]))
+async def _btn_add_report_press(callback: CallbackQuery,
+                                message_text: str):
+    await EditMessageText(text=message_text + "\n➕",
+                          chat_id=callback.message.chat.id,
+                          message_id=callback.message.message_id)
+    await callback.message.answer(
+        text="Добавление отчета",
+        reply_markup=_create_inline_keyboard(
+            width=1,
+            btn_back="⬅️ Назад"))
 
 
 # @router.callback_query(Checks._user)

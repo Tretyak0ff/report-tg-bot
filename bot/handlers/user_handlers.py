@@ -21,10 +21,10 @@ async def _start(message: Message, user: User):
         reply_markup=_create_inline_keyboard(
             1,
             {"action": "btn_report",
-                "text": "📝 Добавить отчет",
+                "text": "📝Отчет",
                 "value": f'{user.work_mode}'},
             {"action": "btn_profile",
-                "text": "🥷 Просмотр профиля",
+                "text": "🥷 Профиля",
                 "value": f'{user.work_mode}'}
         ))
 
@@ -36,10 +36,10 @@ async def _menu(message: Message, user: User):
         reply_markup=_create_inline_keyboard(
             1,
             {"action": "btn_report",
-             "text": "📝 Добавить отчет",
+             "text": "📝 Отчет",
              "value": f'{user.work_mode}'},
             {"action": "btn_profile",
-             "text": "🥷 Просмотр профиля",
+             "text": "🥷 Профиль",
              "value": f'{user.work_mode}'}
         ))
 
@@ -53,7 +53,7 @@ async def _report(message: Message, user: User):
                 width=2,
                 btn_add_report="➕ Добавить",
                 btn_view_report="🔭 Посмотреть",
-                btn_back="⬅ Назад"))
+                btn_menu="🗂 Меню"))
     else:
         await message.answer(
             text=LEXICON_RU['/work_mode'],
@@ -72,7 +72,7 @@ async def _profile(message: Message, user: User):
             reply_markup=_create_inline_keyboard(
                 width=1,
                 btn_edit_profile="✏ Редактировать",
-                btn_back="⬅ Назад"))
+                btn_menu="🗂 Меню"))
     else:
         await message.answer(
             text=LEXICON_RU['/work_mode'],

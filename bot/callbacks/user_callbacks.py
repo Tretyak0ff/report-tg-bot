@@ -5,7 +5,6 @@ from aiogram.types import CallbackQuery
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.keyboard_utils import _create_inline_keyboard
 from models.database import User
-from loguru import logger
 from keyboards.keyboard_utils import UserCallback
 from middlewares.user import CallbackMiddleware
 from aiogram.methods import EditMessageText
@@ -25,10 +24,10 @@ async def btn_back_press(callback: CallbackQuery, user: User,
         reply_markup=_create_inline_keyboard(
             1,
             {"action": "btn_report",
-             "text": "📝 Добавить отчет",
+             "text": "📝 Отчет",
              "value": f'{user.work_mode}'},
             {"action": "btn_profile",
-             "text": "🥷 Просмотр профиля",
+             "text": "🥷 Профиль",
              "value": f'{user.work_mode}'}
         )
     )
@@ -36,7 +35,6 @@ async def btn_back_press(callback: CallbackQuery, user: User,
 
 @router.callback_query(UserCallback.filter(F.value == "None"))
 async def _btn_report_press_new_user(callback: CallbackQuery,
-                                     callback_data: UserCallback,
                                      message_text: str):
     await EditMessageText(text=message_text + "\n<i>⛔ "
                           "Не указан режим работы</i>",
@@ -51,7 +49,12 @@ async def _btn_report_press_new_user(callback: CallbackQuery,
 
 
 @router.callback_query(UserCallback.filter(F.action == "btn_report"))
-async def _btn_report_press(callback: CallbackQuery):
+@router.callback_query(Text(text=["btn_back"]))
+async def _btn_report_press(callback: CallbackQuery,
+                            message_text: str):
+    await EditMessageText(text=message_text + "\n📝",
+                          chat_id=callback.message.chat.id,
+                          message_id=callback.message.message_id)
     await callback.message.answer(text=LEXICON_RU['/report'],
                                   reply_markup=_create_inline_keyboard(
         width=2,
