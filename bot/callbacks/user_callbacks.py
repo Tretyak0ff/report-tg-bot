@@ -34,8 +34,7 @@ async def btn_back_press(callback: CallbackQuery, user: User,
 
 
 @router.callback_query(UserCallback.filter(F.value == "None"))
-async def _btn_report_press_new_user(callback: CallbackQuery,
-                                     message_text: str):
+async def _press_new_user(callback: CallbackQuery, message_text: str):
     await EditMessageText(text=message_text + "\n<i>⛔ "
                           "Не указан режим работы</i>",
                           chat_id=callback.message.chat.id,
@@ -50,8 +49,7 @@ async def _btn_report_press_new_user(callback: CallbackQuery,
 
 @router.callback_query(UserCallback.filter(F.action == "btn_report"))
 @router.callback_query(Text(text=["btn_back"]))
-async def _btn_report_press(callback: CallbackQuery,
-                            message_text: str):
+async def _btn_report_press(callback: CallbackQuery, message_text: str):
     await EditMessageText(text=message_text + "\n📝",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
@@ -64,8 +62,7 @@ async def _btn_report_press(callback: CallbackQuery,
 
 
 @router.callback_query(UserCallback.filter(F.action == "btn_profile"))
-async def _btn_profile_press(callback: CallbackQuery,
-                             user: User,
+async def _btn_profile_press(callback: CallbackQuery, user: User,
                              message_text: str):
     await EditMessageText(text=message_text + "\n🥷",
                           chat_id=callback.message.chat.id,

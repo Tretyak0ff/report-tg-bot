@@ -24,8 +24,7 @@ router.callback_query.middleware(CallbackMiddleware())
 
 
 @router.callback_query(Text(text=["btn_view_report"]))
-async def _btn_view_report_press(callback: CallbackQuery,
-                                 message_text: str):
+async def _btn_view_report_press(callback: CallbackQuery, message_text: str):
     await EditMessageText(text=message_text + "\n🔭",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
@@ -37,8 +36,7 @@ async def _btn_view_report_press(callback: CallbackQuery,
 
 
 @router.callback_query(Text(text=["btn_add_report"]))
-async def _btn_add_report_press(callback: CallbackQuery,
-                                message_text: str):
+async def _btn_add_report_press(callback: CallbackQuery, message_text: str):
     await EditMessageText(text=message_text + "\n➕",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
