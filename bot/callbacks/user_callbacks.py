@@ -1,7 +1,6 @@
 from aiogram import F, Router
 from aiogram.filters import Text
 from aiogram.types import CallbackQuery
-# from aiogram.fsm.context import FSMContext
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.keyboard_utils import _create_inline_keyboard
 from models.database import User

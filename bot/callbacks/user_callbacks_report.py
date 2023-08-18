@@ -4,13 +4,13 @@ from aiogram.types import CallbackQuery
 from aiogram.methods import EditMessageText
 from aiogram.fsm.context import FSMContext
 
-from middlewares.user import CallbackMiddleware
 from keyboards.keyboard_utils import _create_inline_keyboard
+from lexicon.lexicon_ru import LEXICON_RU
+from middlewares.user import CallbackMiddleware
 from states.user import AddTask
 
 # from lexicon.lexicon_ru import LEXICON_RU
 # from keyboards.keyboard_utils import _create_inline_keyboard
-# from models.user import _get_user
 # from loguru import logger
 # from filters.user import FilterUser
 
@@ -37,14 +37,25 @@ async def _btn_add_report_press(callback: CallbackQuery, message_text: str,
     await EditMessageText(text=message_text + "\n➕",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
-
+    await callback.message.answer(
+        text=LEXICON_RU['/add_report'],
+        reply_markup=_create_inline_keyboard(
+            width=1,
+            btn_back="⬅️ Назад"))
     await state.set_state(AddTask.task)
-    # await callback.message.answer(
-    #     text="Добавление отчета",
-    #     reply_markup=_create_inline_keyboard(
-    #         width=1,
-    #         btn_back="⬅️ Назад"))
 
+
+@router.callback_query(Text(text=["btn_compelete_report"]))
+async def _btn_report_press(callback: CallbackQuery, message_text: str):
+    await EditMessageText(text=message_text + "\n✅",
+                          chat_id=callback.message.chat.id,
+                          message_id=callback.message.message_id)
+    await callback.message.answer(text=LEXICON_RU['/report'],
+                                  reply_markup=_create_inline_keyboard(
+        width=2,
+        btn_add_report="➕ Добавить",
+        btn_view_report="🔭 Посмотреть",
+        btn_menu="🗂 Меню"))
 
 # @router.callback_query(Checks._user)
 # @router.callback_query(Text(text=["btn_add_report"]))

@@ -1,10 +1,14 @@
 from typing import Callable, Dict, Any, Awaitable
+
 from aiogram import BaseMiddleware
+from aiogram.methods import EditMessageReplyMarkup
 from aiogram.types import TelegramObject, CallbackQuery
 from sqlalchemy.ext.asyncio import async_sessionmaker
+
+from loguru import logger
+
 from models.user import _get_user
 from datetime import datetime, timedelta, timezone
-from aiogram.methods import EditMessageReplyMarkup
 
 
 class SessionMiddleware(BaseMiddleware):
