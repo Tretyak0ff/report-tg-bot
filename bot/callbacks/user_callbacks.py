@@ -5,8 +5,6 @@ from aiogram.types import CallbackQuery
 from lexicon.lexicon_ru import LEXICON_RU
 from keyboards.keyboard_utils import _create_inline_keyboard
 from models.database import User
-from sqlalchemy.ext.asyncio import AsyncSession
-from models.user import _get_user
 from loguru import logger
 from keyboards.keyboard_utils import UserCallback
 from middlewares.user import CallbackMiddleware
@@ -37,7 +35,6 @@ async def btn_back_press(callback: CallbackQuery, user: User,
 
 
 @router.callback_query(UserCallback.filter(F.value == "None"))
-# @router.callback_query(Text(text=["btn_edit_profile"]))
 async def _btn_report_press_new_user(callback: CallbackQuery,
                                      callback_data: UserCallback,
                                      message_text: str):
@@ -54,9 +51,7 @@ async def _btn_report_press_new_user(callback: CallbackQuery,
 
 
 @router.callback_query(UserCallback.filter(F.action == "btn_report"))
-async def _btn_report_press(callback: CallbackQuery,
-                            callback_data: UserCallback):
-    logger.debug('Дуй')
+async def _btn_report_press(callback: CallbackQuery):
     await callback.message.answer(text=LEXICON_RU['/report'],
                                   reply_markup=_create_inline_keyboard(
         width=2,
@@ -67,11 +62,7 @@ async def _btn_report_press(callback: CallbackQuery,
 
 @router.callback_query(UserCallback.filter(F.action == "btn_profile"))
 async def _btn_profile_press(callback: CallbackQuery,
-                             callback_data: UserCallback,
-                             session: AsyncSession):
-    logger.debug('Хуй')
-    user: User = await _get_user(aiogram_user=callback.from_user,
-                                 session=session)
+                             user: User):
     await callback.message.answer(text=f"{await user._print()}",
                                   reply_markup=_create_inline_keyboard(
                                       width=1,

@@ -24,6 +24,22 @@ router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
 
 
+@router.callback_query(Text(text=["btn_edit_profile"]))
+async def btn_edit_profile_press(callback: CallbackQuery,
+                                 message_text: str,
+                                 session: AsyncSession,
+                                 user: User):
+    await EditMessageText(text=message_text + "\n✏",
+                          chat_id=callback.message.chat.id,
+                          message_id=callback.message.message_id)
+    await callback.message.answer(text=LEXICON_RU['/work_mode'],
+                                  reply_markup=_create_inline_keyboard(
+        width=2,
+        btn_mode_five="5⃣ Пятидневный",
+        btn_mode_shift="🔁 Сменный",
+        btn_menu="🗂 Меню"))
+
+
 @router.callback_query(Text(text=["btn_mode_five"]))
 async def btn_mode_five_press(callback: CallbackQuery,
                               message_text: str,
@@ -32,7 +48,6 @@ async def btn_mode_five_press(callback: CallbackQuery,
     user.work_mode = "five-day"
     await session.merge(user)
     await session.commit()
-    logger.debug(user.__dict__)
     await EditMessageText(text=message_text + "\n5⃣",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
