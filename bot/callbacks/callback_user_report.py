@@ -9,6 +9,8 @@ from lexicon.lexicon_ru import LEXICON_RU
 from middlewares.user import CallbackMiddleware
 from states.user import AddTask
 
+from loguru import logger
+
 
 router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
@@ -19,6 +21,7 @@ async def _btn_view_report_press(callback: CallbackQuery, message_text: str):
     await EditMessageText(text=message_text + "\n🔭",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
+    logger
     await callback.message.answer(
         text="Просмотр задач:",
         reply_markup=_create_inline_keyboard(
