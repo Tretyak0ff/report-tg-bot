@@ -5,8 +5,8 @@ from loguru import logger
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from config.loader import Config, load_config, load_engine
 from handlers import user_handlers
-from callbacks import user_callbacks
-from callbacks import user_callbacks_profile, user_callbacks_report
+from callbacks import callback_user
+from callbacks import callback_user_profile, callback_user_report
 from keyboards.set_menu import set_main_menu
 from middlewares.user import SessionMiddleware
 from aiogram.utils.callback_answer import CallbackAnswerMiddleware
@@ -25,14 +25,11 @@ async def main() -> None:
     await set_main_menu(bot)
     logger.info('Bot is running')
 
-    # dp.include_router(admin_handlers.router)
-    # @router.callback_query(Checks.user)
-
     dp.include_router(user_handlers.router)
-    dp.include_router(user_callbacks.router)
+    dp.include_router(callback_user.router)
 
-    dp.include_router(user_callbacks_report.router)
-    dp.include_router(user_callbacks_profile.router)
+    dp.include_router(callback_user_report.router)
+    dp.include_router(callback_user_profile.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
