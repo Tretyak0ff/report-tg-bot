@@ -1,7 +1,6 @@
 from aiogram import Router
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command, CommandStart
-from aiogram.methods import EditMessageText
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,8 +11,6 @@ from models.user import _create_task
 from middlewares.user import MessageMiddleware
 from states.user import AddTask
 
-
-from loguru import logger
 
 router: Router = Router()
 router.message.middleware(MessageMiddleware())
@@ -92,7 +89,6 @@ async def _profile(message: Message, user: User):
 @router.message(AddTask.task)
 async def _add_task(message: Message, session: AsyncSession,
                     state: FSMContext, user: User):
-    logger.error('!!!!!   Алоха   !!!!!')
     await state.update_data(task=message.text)
     await _create_task(session=session, user=user, task=message.text)
     await message.answer(
@@ -104,7 +100,6 @@ async def _add_task(message: Message, session: AsyncSession,
 
 @router.message()
 async def _echo(message: Message):
-    logger.debug(message.text)
     await message.answer(text=LEXICON_RU['/echo'])
     # try:
     #     await message.send_copy(chat_id=message.chat.id)

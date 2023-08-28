@@ -7,6 +7,7 @@ from models.database import User
 from keyboards.keyboard_utils import UserCallback
 from middlewares.user import CallbackMiddleware
 from aiogram.methods import EditMessageText
+from aiogram.fsm.context import FSMContext
 
 router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
@@ -48,7 +49,9 @@ async def _press_new_user(callback: CallbackQuery, message_text: str):
 
 @router.callback_query(UserCallback.filter(F.action == "btn_report"))
 @router.callback_query(Text(text=["btn_back"]))
-async def _btn_report_press(callback: CallbackQuery, message_text: str):
+async def _btn_report_press(callback: CallbackQuery, state: FSMContext,
+                            message_text: str):
+    await state.clear()
     await EditMessageText(text=message_text + "\n📝",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
