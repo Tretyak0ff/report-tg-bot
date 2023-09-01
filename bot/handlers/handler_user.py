@@ -87,8 +87,8 @@ async def _profile(message: Message, user: User):
 
 
 @router.message(AddTask.task)
-async def _add_task(message: Message, session: AsyncSession,
-                    state: FSMContext, user: User):
+async def _add_task(message: Message, state: FSMContext,
+                    session: AsyncSession, user: User):
     await state.update_data(task=message.text)
     await _create_task(session=session, user=user, task=message.text)
     await message.answer(

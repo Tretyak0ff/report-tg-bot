@@ -4,7 +4,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from loguru import logger
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from config.loader import Config, load_config, load_engine
-from handlers import user_handlers
+from handlers import handler_user
 from callbacks import callback_user
 from callbacks import callback_user_profile, callback_user_report
 from keyboards.set_menu import set_main_menu
@@ -25,7 +25,7 @@ async def main() -> None:
     await set_main_menu(bot)
     logger.info('Bot is running')
 
-    dp.include_router(user_handlers.router)
+    dp.include_router(handler_user.router)
     dp.include_router(callback_user.router)
 
     dp.include_router(callback_user_report.router)
