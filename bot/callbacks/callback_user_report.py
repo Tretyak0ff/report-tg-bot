@@ -5,7 +5,6 @@ from aiogram.methods import EditMessageText
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
 from keyboards.keyboard_utils import _create_inline_keyboard
 from lexicon.lexicon_ru import LEXICON_RU
 from middlewares.user import CallbackMiddleware
