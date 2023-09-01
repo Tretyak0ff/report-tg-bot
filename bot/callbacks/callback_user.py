@@ -1,13 +1,15 @@
 from aiogram import F, Router
 from aiogram.filters import Text
 from aiogram.types import CallbackQuery
-from lexicon.lexicon_ru import LEXICON_RU
-from keyboards.keyboard_utils import _create_inline_keyboard
-from models.database import User
-from keyboards.keyboard_utils import UserCallback
-from middlewares.user import CallbackMiddleware
 from aiogram.methods import EditMessageText
 from aiogram.fsm.context import FSMContext
+
+from keyboards.keyboard_utils import UserCallback
+from keyboards.keyboard_utils import _create_inline_keyboard
+from lexicon.lexicon_ru import LEXICON_RU
+from models.database import User
+from middlewares.user import CallbackMiddleware
+
 
 router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())

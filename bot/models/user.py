@@ -59,8 +59,8 @@ async def _create_task(user: User, task: str, session: AsyncSession) -> Task:
 
 
 async def _view_report(user: User, session: AsyncSession):
-    logger.debug(user.id)
-    task = await(session.scalar(select(Task)))
+    task = await(session.scalars(select(Task).where(Task.user_id == 63)))
     # user = await(session.scalar(select(User).where(id == id)))
-    logger.debug(task.__dict__)
+    for t in task:
+        logger.debug(t.task)
     return user
