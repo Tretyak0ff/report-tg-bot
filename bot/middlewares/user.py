@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from models.user import _get_user
 from datetime import datetime, timedelta, timezone
+from loguru import logger
 
 
 class SessionMiddleware(BaseMiddleware):
@@ -36,8 +37,10 @@ class MessageMiddleware(BaseMiddleware):
         data: Dict[str, Any]
     ) -> Any:
         try:
-            await EditMessageReplyMarkup(chat_id=event.chat.id,
-                                         message_id=event.message_id-1)
+            for bot in data["bots"]:
+                await bot(EditMessageReplyMarkup(
+                    chat_id=event.chat.id,
+                    message_id=event.message_id-1))
         finally:
             return await handler(event, data)
 

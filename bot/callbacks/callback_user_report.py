@@ -1,10 +1,11 @@
 
-from aiogram import Router
-from aiogram.filters import Text
+import pytz
+from aiogram import F, Router
 from aiogram.types import CallbackQuery
 from aiogram.methods import EditMessageText
 from aiogram.fsm.context import FSMContext
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+# , timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from keyboards.keyboard_utils import _create_inline_keyboard
@@ -24,7 +25,7 @@ router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
 
 
-@router.callback_query(Text(text=["btn_view_report"]))
+@router.callback_query(F.text(text=["btn_view_report"]))
 async def _btn_view_report_press(callback: CallbackQuery,
                                  message_text: str,
                                  session: AsyncSession,
@@ -32,7 +33,7 @@ async def _btn_view_report_press(callback: CallbackQuery,
     await EditMessageText(text=message_text + "\n🔭",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
-    now_date = datetime.now()
+    now_date = datetime.now(tz=pytz.timezone('Europe/Moscow'))
     # now_date: datetime = datetime.now().replace(tzinfo=timezone.utc)
     # delta_date: datetime = timedelta(minutes=5)
 
@@ -46,13 +47,13 @@ async def _btn_view_report_press(callback: CallbackQuery,
             btn_back="⬅️ Назад"))
 
 
-@router.callback_query(Text(text=["btn_add_report"]))
+@router.callback_query(F.text(text=["btn_add_report"]))
 async def _btn_add_report_press(callback: CallbackQuery,
                                 message_text: str,
                                 state: FSMContext):
-    await EditMessageText(text=message_text + "\n➕",
-                          chat_id=callback.message.chat.id,
-                          message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n➕",
+                                     chat_id=callback.message.chat.id,
+                                     message_id=callback.message.message_id)
     await callback.message.answer(
         text=LEXICON_RU['/add_report'],
         reply_markup=_create_inline_keyboard(
@@ -61,13 +62,13 @@ async def _btn_add_report_press(callback: CallbackQuery,
     await state.set_state(AddTask.task)
 
 
-@router.callback_query(Text(text=["btn_compelete_report"]))
+@router.callback_query(F.text(text=["btn_compelete_report"]))
 async def _btn_report_press(callback: CallbackQuery,
                             state: FSMContext,
                             message_text: str):
-    await EditMessageText(text=message_text + "\n✅",
-                          chat_id=callback.message.chat.id,
-                          message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n✅",
+                                     chat_id=callback.message.chat.id,
+                                     message_id=callback.message.message_id)
     await state.clear()
     await callback.message.answer(
         text=LEXICON_RU['/report'],

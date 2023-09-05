@@ -1,7 +1,6 @@
 from aiogram import F, Router
-from aiogram.filters import Text
+# from aiogram.filters import Text
 from aiogram.types import CallbackQuery
-from aiogram.methods import EditMessageText
 from aiogram.fsm.context import FSMContext
 
 from keyboards.keyboard_utils import UserCallback
@@ -10,17 +9,17 @@ from lexicon.lexicon_ru import LEXICON_RU
 from models.database import User
 from middlewares.user import CallbackMiddleware
 
+from loguru import logger
+
 
 router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
 
 
-@router.callback_query(Text(text=["btn_menu"]))
+@router.callback_query(F.data == "btn_menu")
 async def btn_back_press(callback: CallbackQuery, user: User,
                          message_text: str):
-    await EditMessageText(text=message_text + "\n🗂",
-                          chat_id=callback.message.chat.id,
-                          message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n🗂")
     await callback.message.answer(
         text=LEXICON_RU['/menu'],
         reply_markup=_create_inline_keyboard(
@@ -37,10 +36,8 @@ async def btn_back_press(callback: CallbackQuery, user: User,
 
 @router.callback_query(UserCallback.filter(F.value == "None"))
 async def _press_new_user(callback: CallbackQuery, message_text: str):
-    await EditMessageText(text=message_text + "\n<i>⛔ "
-                          "Не указан режим работы</i>",
-                          chat_id=callback.message.chat.id,
-                          message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n<i>⛔ "
+                                     "Не указан режим работы</i>")
     await callback.message.answer(text=LEXICON_RU['/work_mode'],
                                   reply_markup=_create_inline_keyboard(
         width=2,
@@ -50,13 +47,13 @@ async def _press_new_user(callback: CallbackQuery, message_text: str):
 
 
 @router.callback_query(UserCallback.filter(F.action == "btn_report"))
-@router.callback_query(Text(text=["btn_back"]))
-async def _btn_report_press(callback: CallbackQuery, state: FSMContext,
+@router.callback_query(F.text(text=["btn_back"]))
+async def _btn_report_press(callback: CallbackQuery,
+                            state: FSMContext,
                             message_text: str):
+    logger.debug(callback.message)
     await state.clear()
-    await EditMessageText(text=message_text + "\n📝",
-                          chat_id=callback.message.chat.id,
-                          message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n📝")
     await callback.message.answer(text=LEXICON_RU['/report'],
                                   reply_markup=_create_inline_keyboard(
         width=2,
@@ -66,11 +63,10 @@ async def _btn_report_press(callback: CallbackQuery, state: FSMContext,
 
 
 @router.callback_query(UserCallback.filter(F.action == "btn_profile"))
-async def _btn_profile_press(callback: CallbackQuery, user: User,
+async def _btn_profile_press(callback: CallbackQuery,
+                             user: User,
                              message_text: str):
-    await EditMessageText(text=message_text + "\n🥷",
-                          chat_id=callback.message.chat.id,
-                          message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n🥷")
     await callback.message.answer(text=LEXICON_RU['/profile'] +
                                   f"{await user._print()}",
                                   reply_markup=_create_inline_keyboard(
