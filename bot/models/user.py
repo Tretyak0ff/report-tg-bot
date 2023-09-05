@@ -2,7 +2,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.types.user import User as AiogramUser
 from models.database import User, Task
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+# , timedelta, timezone
 from loguru import logger
 
 

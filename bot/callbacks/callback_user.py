@@ -9,8 +9,6 @@ from lexicon.lexicon_ru import LEXICON_RU
 from models.database import User
 from middlewares.user import CallbackMiddleware
 
-from loguru import logger
-
 
 router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
@@ -51,7 +49,6 @@ async def _press_new_user(callback: CallbackQuery, message_text: str):
 async def _btn_report_press(callback: CallbackQuery,
                             state: FSMContext,
                             message_text: str):
-    logger.debug(callback.message)
     await state.clear()
     await callback.message.edit_text(text=message_text + "\n📝")
     await callback.message.answer(text=LEXICON_RU['/report'],

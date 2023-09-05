@@ -18,8 +18,6 @@ async def main() -> None:
     storage: MemoryStorage = MemoryStorage()
     bot: Bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 
-    logger.debug(bot)
-
     dp: Dispatcher = Dispatcher(storage=storage)
     dp.update.outer_middleware(SessionMiddleware(session=async_session))
     dp.callback_query.middleware(CallbackAnswerMiddleware())

@@ -13,11 +13,9 @@ router: Router = Router()
 router.callback_query.middleware(CallbackMiddleware())
 
 
-@router.callback_query(F.text(text=["btn_edit_profile"]))
+@router.callback_query(F.data == "btn_edit_profile")
 async def btn_edit_profile_press(callback: CallbackQuery, message_text: str):
-    await callback.message.edit_text(text=message_text + "\n✏",
-                                     chat_id=callback.message.chat.id,
-                                     message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n✏")
     await callback.message.answer(text=LEXICON_RU['/work_mode'],
                                   reply_markup=_create_inline_keyboard(
         width=2,
@@ -26,7 +24,7 @@ async def btn_edit_profile_press(callback: CallbackQuery, message_text: str):
         btn_menu="🗂 Меню"))
 
 
-@router.callback_query(F.text(text=["btn_mode_five"]))
+@router.callback_query(F.data == "btn_mode_five")
 async def btn_mode_five_press(callback: CallbackQuery,
                               message_text: str,
                               session: AsyncSession,
@@ -35,9 +33,7 @@ async def btn_mode_five_press(callback: CallbackQuery,
     await _update_user(session=session,
                        aiogram_user=callback.from_user,
                        user=user)
-    await callback.message.edit_text(text=message_text + "\n5⃣",
-                                     chat_id=callback.message.chat.id,
-                                     message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n5⃣")
     await callback.message.answer(
         text=LEXICON_RU['/menu'],
         reply_markup=_create_inline_keyboard(
@@ -51,7 +47,7 @@ async def btn_mode_five_press(callback: CallbackQuery,
         ))
 
 
-@router.callback_query(F.text(text=["btn_mode_shift"]))
+@router.callback_query(F.data == "btn_mode_shift")
 async def btn_mode_shift_press(callback: CallbackQuery,
                                message_text: str,
                                session: AsyncSession,
@@ -60,9 +56,7 @@ async def btn_mode_shift_press(callback: CallbackQuery,
     await _update_user(session=session,
                        aiogram_user=callback.from_user,
                        user=user)
-    await callback.message.edit_text(text=message_text + "\n🔁",
-                                     chat_id=callback.message.chat.id,
-                                     message_id=callback.message.message_id)
+    await callback.message.edit_text(text=message_text + "\n🔁")
     await callback.message.answer(
         text=LEXICON_RU['/menu'],
         reply_markup=_create_inline_keyboard(
