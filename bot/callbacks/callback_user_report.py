@@ -1,8 +1,10 @@
+
 from aiogram import Router
 from aiogram.filters import Text
 from aiogram.types import CallbackQuery
 from aiogram.methods import EditMessageText
 from aiogram.fsm.context import FSMContext
+from datetime import datetime, timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from keyboards.keyboard_utils import _create_inline_keyboard
@@ -11,6 +13,8 @@ from middlewares.user import CallbackMiddleware
 from states.user import AddTask
 from models.database import User
 from models.user import _view_report
+
+from loguru import logger
 
 
 # from loguru import logger
@@ -28,7 +32,13 @@ async def _btn_view_report_press(callback: CallbackQuery,
     await EditMessageText(text=message_text + "\n🔭",
                           chat_id=callback.message.chat.id,
                           message_id=callback.message.message_id)
-    await _view_report(user=user, session=session)
+    now_date = datetime.now()
+    # now_date: datetime = datetime.now().replace(tzinfo=timezone.utc)
+    # delta_date: datetime = timedelta(minutes=5)
+
+    logger.debug(now_date)
+    tasks = await _view_report(user=user, session=session)
+
     await callback.message.answer(
         text="Просмотр задач:",
         reply_markup=_create_inline_keyboard(

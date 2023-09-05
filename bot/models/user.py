@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from aiogram.types.user import User as AiogramUser
 from models.database import User, Task
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from loguru import logger
 
 
@@ -51,16 +51,18 @@ async def _create_task(user: User, task: str, session: AsyncSession) -> Task:
     new_task = Task(
         task=task,
         created_at=datetime.now(),
-        user_id=user.id
-    )
+        user_id=user.id)
     session.add(new_task)
     await session.commit()
     return new_task
 
 
 async def _view_report(user: User, session: AsyncSession):
-    task = await(session.scalars(select(Task).where(Task.user_id == 63)))
-    # user = await(session.scalar(select(User).where(id == id)))
-    for t in task:
-        logger.debug(t.task)
-    return user
+
+    tasks = await(session.scalars(select(Task).where(Task.user_id == user.id)))
+    if tasks:
+        for task in tasks:
+            logger.debug((task.task, task.created_at.strftime("%x %X")))
+        return tasks
+    else:
+        return None
