@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from models.user import _get_user
 from datetime import datetime, timedelta, timezone
-from loguru import logger
 
 
 class SessionMiddleware(BaseMiddleware):
