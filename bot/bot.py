@@ -3,7 +3,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from loguru import logger
 from sqlalchemy.ext.asyncio import async_sessionmaker
-from config.loader import Config, load_config, load_engine
+from config.loader import Config, load_config
 from handlers import handler_user
 from callbacks import callback_user
 from callbacks import callback_user_profile, callback_user_report
@@ -14,7 +14,7 @@ from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 
 async def main() -> None:
     config: Config = load_config(".env")
-    async_session: async_sessionmaker = load_engine(config.database)
+    async_session: async_sessionmaker = config.get_session()
     storage: MemoryStorage = MemoryStorage()
     bot: Bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 

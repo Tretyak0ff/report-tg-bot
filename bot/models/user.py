@@ -60,7 +60,7 @@ async def _create_task(user: User, task: str, session: AsyncSession) -> Task:
 
 async def _view_report(user: User, session: AsyncSession):
 
-    tasks = await(session.scalars(select(Task).where(Task.user_id == user.id)))
+    tasks = session.scalars(select(Task).where(Task.user_id == user.id))
     if tasks:
         for task in tasks:
             logger.debug((task.task, task.created_at.strftime("%x %X")))

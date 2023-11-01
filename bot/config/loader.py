@@ -23,6 +23,15 @@ class Config:
     tg_bot: TGBot
     database: DBConfig
 
+    def get_session(self) -> async_sessionmaker:
+        url_database = (f"postgresql+asyncpg://{self.database.user}:"
+                        f"{self.database.password}@{self.database.host}:"
+                        f"{self.database.port}/{self.database.name}")
+        engine = create_async_engine(
+            url=url_database, echo=False)
+        async_session = async_sessionmaker(engine, expire_on_commit=False)
+        return async_session
+
 
 def load_config(path: str | None) -> Config:
     env: Env = Env()
@@ -38,16 +47,3 @@ def load_config(path: str | None) -> Config:
                                     )
                   )
     return cnfg
-
-
-def get_url_database(database: Config) -> str:
-    return (f"postgresql+asyncpg://{database.user}:"
-            f"{database.password}@{database.host}:"
-            f"{database.port}/{database.name}")
-
-
-def load_engine(database: Config) -> async_sessionmaker:
-    engine = create_async_engine(
-        url=get_url_database(database=database), echo=False)
-    async_session = async_sessionmaker(engine, expire_on_commit=False)
-    return async_session
